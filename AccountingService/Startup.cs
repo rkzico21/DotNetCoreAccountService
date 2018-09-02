@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AccountingService.DbContexts;
+using AccountingService.Filetes;
+using AccountingService.Middlewares;
 using AccountingService.Repositories;
 using AccountingService.Services;
 using Microsoft.AspNetCore.Builder;
@@ -31,12 +33,22 @@ namespace AccountingService
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.Configure<ApiBehaviorOptions>(options =>
+                {
+                    options.SuppressModelStateInvalidFilter = true;
+                });
+
             services.AddDbContext<AccountingDbContext>(opt => 
                 opt.UseInMemoryDatabase("AccountingDb"));  
             
-            services.AddScoped<AccountRepository, AccountRepository>();
-            services.AddScoped<AccountService, AccountService>();
 
+            services.AddScoped<AccountRepository, AccountRepository>();
+            services.AddScoped<AccountGroupRepository, AccountGroupRepository>();
+            services.AddScoped<AccountTypeRepository, AccountTypeRepository>();
+            services.AddScoped<AccountService, AccountService>();
+            
+
+            services.AddCors();
            /* services.AddHttpsRedirection(options =>
             {
                 options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
@@ -57,8 +69,11 @@ namespace AccountingService
                 app.UseHsts();
             }
 
+            app.UseCors(opt =>opt.WithHeaders("*").WithMethods("*").WithOrigins("*"));
+
             this.SeedData(app);
 
+            app.UseMiddleware(typeof(ExceptionHandler));
             //app.UseHttpsRedirection();
             app.UseMvc();
         }

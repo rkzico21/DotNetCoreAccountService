@@ -6,63 +6,51 @@ namespace AccountingService
     using System.Linq;
     using System.Threading.Tasks;
     using AccountingService.Entities;
+    using AccountingService.Filetes;
     using AccountingService.Services;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.Extensions.Logging;
 
     [Route("api/[controller]")]
     [ApiController]
+    [ValidateModel]
     public class AccountsController : ControllerBase
     {
         private AccountService accountService;
-        
-        public AccountsController(AccountService accountService)
+        private readonly ILogger<AccountsController> logger;
+
+        public AccountsController(AccountService accountService, ILogger<AccountsController> logger)
         {
             this.accountService = accountService;
+            this.logger = logger;
         }
         
         [HttpGet]
         public IActionResult GetAccounts([FromQuery(Name="orgid")] int? organizationId, [FromQuery(Name="group")] int? group, [FromQuery(Name="type")] int? accountType)
         {
-            if(!accountType.HasValue && !group.HasValue && !organizationId.HasValue) 
-            {
-                return  Ok(accountService.GetAccounts());
-            }   
-            else
-            {
-                return  Ok(accountService.GetAccounts(organizationId, group, accountType));
-            }
+            return  Ok(accountService.GetAccounts(organizationId, group, accountType));
         }
 
 
         [HttpGet("{id}", Name="GetAccount")]
         public IActionResult GetAccount(int id)
         {
+            logger.LogDebug($"Get account with id : {id}");
             var account = accountService.GetAccount(id);
-            if (account == null)
-            {
-                return NotFound();
-            }
-            
             return  Ok(account);
         }
-
-
         
         [HttpPost]
-        public IActionResult  CreateAccount([FromBody] Account account)
+        public IActionResult  CreateAccount([FromBody] Account newAccount)
         {
-            if(ModelState.IsValid)
-            {
-                accountService.CreateAccount(account);
-                return CreatedAtRoute("GetAccount", new { id = account.Id }, account);
-            }
-            
-            return ValidationProblem();
+            var account =  accountService.CreateAccount(newAccount);
+            return CreatedAtRoute("GetAccount", new { id = account.Id }, account);
         }
 
         [HttpDelete("{id}")]
         public IActionResult DeleteAccount(int id)
         {
+            logger.LogDebug($"Deleting account with id : {id}");
             accountService.Delete(id);
             return NoContent();
         }

@@ -6,6 +6,7 @@ namespace AccountingService.Repositories
     using System.Linq;
     using AccountingService.DbContexts;
     using AccountingService.Entities;
+    using Microsoft.EntityFrameworkCore;
 
     public class AccountTypeRepository
     {
@@ -23,26 +24,34 @@ namespace AccountingService.Repositories
             return accountType;
         }
         
-        public IEnumerable<AccountType> FindAll()
-        {
-            return this.dbContext.AccountTypes.ToList();
-        }
-
         public AccountType FindById(int id)
         {
-            return this.dbContext.AccountTypes.FirstOrDefault(a => a.Id == id);
+            var queryble = this.GetAccountsTypeQueryble();
+            return queryble.FirstOrDefault(a => a.Id == id);
         }
         
-        public IEnumerable<AccountType> FindAll(int? organizationId, int? group)
+        public IEnumerable<AccountType> FindAll(int? organizationId, int? group, bool includeAccounts = false)
         {
-            var allAccountTypes = this.dbContext.AccountTypes.AsQueryable();
+            var allAccountTypes = this.GetAccountsTypeQueryble(includeAccounts);
             
             if(group.HasValue)
             {
-                allAccountTypes = allAccountTypes.Where(a=>a.GroupId == a.GroupId);
+                allAccountTypes = allAccountTypes.Where(a=>a.GroupId == group);
             }
             
             return allAccountTypes.ToList();
         } 
+
+
+        private IQueryable<AccountType> GetAccountsTypeQueryble(bool includeAccounts = false)
+        {
+             var queryble = this.dbContext.AccountTypes.AsQueryable();
+             if(includeAccounts)
+             {
+                queryble = queryble.Include(t=>t.Accounts);
+             }
+
+             return queryble;
+        }
     }
 }

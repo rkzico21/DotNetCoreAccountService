@@ -1,5 +1,6 @@
 namespace AccountingService.Entities
 {
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
@@ -12,5 +13,7 @@ namespace AccountingService.Entities
         public string Name { get; set; }
 
         public int GroupId { get; set; }
+
+        public ICollection<Account> Accounts { get; set; }
     }
 }
