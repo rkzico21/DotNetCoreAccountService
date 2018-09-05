@@ -20,7 +20,6 @@ namespace AccountingService.DbContexts
 
        protected override void  OnModelCreating(ModelBuilder modelBuilder)
        {
-
            modelBuilder.Entity<AccountType>().HasMany(t => t.Accounts );
 
            modelBuilder.Entity<AccountGroup>().HasData(
@@ -48,4 +47,5 @@ namespace AccountingService.DbContexts
        }
 
     }
+
 }

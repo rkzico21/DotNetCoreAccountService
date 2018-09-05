@@ -13,7 +13,6 @@ namespace AccountingService
 
     [Route("api/[controller]")]
     [ApiController]
-    [ValidateModel]
     public class AccountsController : ControllerBase
     {
         private AccountService accountService;
@@ -41,6 +40,7 @@ namespace AccountingService
         }
         
         [HttpPost]
+        [ValidateModel]
         public IActionResult  CreateAccount([FromBody] Account newAccount)
         {
             var account =  accountService.CreateAccount(newAccount);

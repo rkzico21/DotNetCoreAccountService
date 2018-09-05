@@ -38,22 +38,24 @@ namespace AccountingService
                     options.SuppressModelStateInvalidFilter = true;
                 });
 
-            services.AddDbContext<AccountingDbContext>(opt => 
-                opt.UseInMemoryDatabase("AccountingDb"));  
             
 
+            services.AddDbContext<AccountingDbContext>(opt => opt.UseInMemoryDatabase("AccountingDb"));
+            /*services.AddDbContext<AccountingDbContext>(opt => 
+                    opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"))); */
+            
             services.AddScoped<AccountRepository, AccountRepository>();
             services.AddScoped<AccountGroupRepository, AccountGroupRepository>();
             services.AddScoped<AccountTypeRepository, AccountTypeRepository>();
             services.AddScoped<AccountService, AccountService>();
-            
-
+             services.AddDefaultAWSOptions(Configuration.GetAWSOptions());
+            services.AddAWSService<Amazon.S3.IAmazonS3>();
             services.AddCors();
            /* services.AddHttpsRedirection(options =>
             {
                 options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
                 options.HttpsPort = 5001;
-            });*/ 
+            });*/
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -71,14 +73,15 @@ namespace AccountingService
 
             app.UseCors(opt =>opt.WithHeaders("*").WithMethods("*").WithOrigins("*"));
 
+            // required for in memory
             this.SeedData(app);
 
             app.UseMiddleware(typeof(ExceptionHandler));
-            //app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
             app.UseMvc();
         }
 
-
+        
         private void SeedData(IApplicationBuilder app)
         {
              using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
