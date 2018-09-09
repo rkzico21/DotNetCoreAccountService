@@ -16,6 +16,9 @@ namespace AccountingService.DbContexts
         public DbSet<AccountGroup> AccountGroups { get; set;}
         
         public DbSet<AccountType> AccountTypes { get; set;}
+        
+        public DbSet<Transaction> Transactions { get; set;}
+
 
 
        protected override void  OnModelCreating(ModelBuilder modelBuilder)

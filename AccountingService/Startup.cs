@@ -32,10 +32,16 @@ namespace AccountingService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc().
+                    AddJsonOptions(options=> 
+                    {
+                        options.SerializerSettings.DateFormatString ="yyyy-MM-dd";
+                    }).
+                    SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.Configure<ApiBehaviorOptions>(options =>
                 {
                     options.SuppressModelStateInvalidFilter = true;
+                    
                 });
 
             
@@ -47,8 +53,12 @@ namespace AccountingService
             services.AddScoped<AccountRepository, AccountRepository>();
             services.AddScoped<AccountGroupRepository, AccountGroupRepository>();
             services.AddScoped<AccountTypeRepository, AccountTypeRepository>();
+            services.AddScoped<TransactionRepository, TransactionRepository >();
+           
             services.AddScoped<AccountService, AccountService>();
-             services.AddDefaultAWSOptions(Configuration.GetAWSOptions());
+            services.AddScoped<TransactionService, TransactionService>();
+            
+            services.AddDefaultAWSOptions(Configuration.GetAWSOptions());
             services.AddAWSService<Amazon.S3.IAmazonS3>();
             services.AddCors();
            /* services.AddHttpsRedirection(options =>
@@ -77,7 +87,7 @@ namespace AccountingService
             this.SeedData(app);
 
             app.UseMiddleware(typeof(ExceptionHandler));
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseMvc();
         }
 
