@@ -54,10 +54,11 @@ namespace AccountingService
             services.AddScoped<AccountGroupRepository, AccountGroupRepository>();
             services.AddScoped<AccountTypeRepository, AccountTypeRepository>();
             services.AddScoped<TransactionRepository, TransactionRepository >();
+            services.AddScoped<OrganizationRepository, OrganizationRepository>();
            
             services.AddScoped<AccountService, AccountService>();
             services.AddScoped<TransactionService, TransactionService>();
-            
+            services.AddScoped<OrganizationService, OrganizationService>();
             services.AddDefaultAWSOptions(Configuration.GetAWSOptions());
             services.AddAWSService<Amazon.S3.IAmazonS3>();
             services.AddCors();

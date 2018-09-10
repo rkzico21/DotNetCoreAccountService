@@ -39,7 +39,7 @@ namespace AccountingService.Repositories
                 allAccountTypes = allAccountTypes.Where(a=>a.GroupId == group);
             }
             
-            return allAccountTypes.ToList();
+            return allAccountTypes.AsEnumerable();
         } 
 
 
