@@ -20,10 +20,7 @@ namespace AccountingService.Services
             this.logger = logger;
         }
 
-        public IEnumerable<Transaction> GetTransactions(int? organizationId)
-        {
-            return repository.FindAll(organizationId);
-        }
+        public IEnumerable<Transaction> GetTransactions(int? organizationId) => repository.FindAll(organizationId);
 
         public Transaction GetTransaction(int id)
         {
@@ -37,6 +34,13 @@ namespace AccountingService.Services
 
             return transaction;
         }
+
+        public IEnumerable<TransactionType> GetTransactionTypes() => new List<TransactionType>
+            {
+                new TransactionType {Id=1, Name="Income"},
+                new TransactionType {Id=2, Name="Expense"},
+                new TransactionType {Id=3, Name="Journal"}
+            };
 
         public Transaction CreateTransaction(Transaction transaction)
         {
@@ -57,9 +61,6 @@ namespace AccountingService.Services
             return repository.Add(transaction);
         }
 
-        public void Delete(int id)
-        {
-            repository.Delete(id);
-        }
+        public void Delete(int id) => repository.Delete(id);
     }
 }

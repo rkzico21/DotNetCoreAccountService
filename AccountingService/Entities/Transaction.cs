@@ -13,12 +13,21 @@ namespace AccountingService.Entities
         [Column("id")]
         public int Id {get; set;}
         
+
+        [Required]
+        [Column("transaction_type")]
+        public int? TransactionTypeId { get; set; }
+
+
         [Required]
         [Column("account_id")]
         public int? AccountId { get; set; }
 
         [Column("amount")]
         public double Amount { get; set; }
+
+        [Column("description")]
+        public string Description { get; set; }
 
         [DataType(DataType.Date)]
         [Column("transaction_date")]

@@ -25,7 +25,7 @@ namespace AccountingService
         }
         
         [HttpGet]
-        public IActionResult GetAccounts([FromQuery(Name="orgid")] int? organizationId)
+        public IActionResult GetTransactions([FromQuery(Name="orgid")] int? organizationId)
         {
             return  Ok(transactionService.GetTransactions(organizationId));
         }
