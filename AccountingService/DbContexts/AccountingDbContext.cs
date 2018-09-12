@@ -1,16 +1,32 @@
 namespace AccountingService.DbContexts 
 {
+    using System;
     using AccountingService.Entities;
     using Microsoft.EntityFrameworkCore;
+    using System.Collections;
+    using System.Collections.Generic;
+
     public class AccountingDbContext : DbContext
     {
         
+        private readonly Dictionary<Type, Object> DbSets;
         public AccountingDbContext(DbContextOptions<AccountingDbContext> options)
             : base(options)
         {
+            this.DbSets = new Dictionary<Type, Object>();
+            this.DbSets.Add(typeof(Account), Accounts);
+            this.DbSets.Add(typeof(AccountGroup), AccountGroups);
+            this.DbSets.Add(typeof(AccountType), AccountTypes);
+            this.DbSets.Add(typeof(Transaction), Transactions);
         }
 
 
+
+        public DbSet<T> GetDbSet<T>(Type type) where T: EntityBase
+        {
+              return  (DbSet<T>)DbSets[type] ;  
+        }
+ 
         public DbSet<Account> Accounts { get; set;}
 
         public DbSet<AccountGroup> AccountGroups { get; set;}

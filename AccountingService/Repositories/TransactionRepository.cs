@@ -5,16 +5,14 @@ namespace AccountingService.Repositories
     using System.Linq;
     using AccountingService.DbContexts;
     using AccountingService.Entities;
-    public class TransactionRepository
+    public class TransactionRepository : RepositoryBase<Transaction>
     {
-        private readonly AccountingDbContext dbContext;
-
         public TransactionRepository(AccountingDbContext dbContext)
+               : base(dbContext)
         {
-            this.dbContext = dbContext;       
         }
 
-        public Transaction Add(Transaction transaction) 
+        /*public Transaction Add(Transaction transaction) 
         {
             this.dbContext.Transactions.Add(transaction);
             this.dbContext.SaveChanges();
@@ -35,7 +33,8 @@ namespace AccountingService.Repositories
         {
             return this.dbContext.Transactions.FirstOrDefault(a => a.Id == id);
         }
-        
+        */
+
         public IEnumerable<Transaction> FindAll(int? organizationId)
         {
             var allTransactions = this.dbContext.Transactions.AsQueryable();
@@ -44,7 +43,6 @@ namespace AccountingService.Repositories
             {
             
             }
-            
             
             return allTransactions.ToList();
         } 

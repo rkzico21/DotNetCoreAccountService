@@ -6,15 +6,17 @@ using AccountingService.Entities;
 
 namespace AccountingService.Repositories
 {
-    public class AccountGroupRepository
+    public class AccountGroupRepository : RepositoryBase<AccountGroup>
     {
         private readonly AccountingDbContext dbContext;
 
-        public AccountGroupRepository(AccountingDbContext dbContext)
+        public AccountGroupRepository(AccountingDbContext dbContext) :
+            base(dbContext)
         {
-            this.dbContext = dbContext;       
+            
         }
 
+        /* 
         public AccountGroup Add(AccountGroup accountGroup) 
         {
             this.dbContext.AccountGroups.Add(accountGroup);
@@ -22,14 +24,16 @@ namespace AccountingService.Repositories
             return accountGroup;
         }
         
-        public IEnumerable<AccountGroup> FindAll()
-        {
-            return this.dbContext.AccountGroups.ToList();
-        }
+        
         
         public AccountGroup FindById(int id)
         {
             return this.dbContext.AccountGroups.FirstOrDefault(a => a.Id == id);
+        }*/
+
+        public IEnumerable<AccountGroup> FindAll()
+        {
+            return this.DbContext.AccountGroups.ToList();
         }
     }
 }

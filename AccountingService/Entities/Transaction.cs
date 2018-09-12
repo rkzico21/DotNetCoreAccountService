@@ -6,14 +6,8 @@ namespace AccountingService.Entities
     using System.ComponentModel.DataAnnotations.Schema;
 
     [Table("transactions")]
-    public class Transaction
+    public class Transaction : EntityBase
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]   
-        [Column("id")]
-        public int Id {get; set;}
-        
-
         [Required]
         [Column("transaction_type")]
         public int? TransactionTypeId { get; set; }

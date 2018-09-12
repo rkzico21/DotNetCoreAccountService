@@ -5,15 +5,16 @@ namespace AccountingService.Repositories
     using System.Linq;
     using AccountingService.DbContexts;
     using AccountingService.Entities;
-    public class AccountRepository
+    public class AccountRepository : RepositoryBase<Account>
     {
-        private readonly AccountingDbContext dbContext;
-
-        public AccountRepository(AccountingDbContext dbContext)
+        
+        public AccountRepository(AccountingDbContext dbContext) 
+                : base(dbContext)
         {
-            this.dbContext = dbContext;       
+                   
         }
 
+        /* 
         public Account Add(Account account) 
         {
             this.dbContext.Accounts.Add(account);
@@ -36,11 +37,11 @@ namespace AccountingService.Repositories
         public Account FindById(int id)
         {
             return this.dbContext.Accounts.FirstOrDefault(a => a.Id == id);
-        }
+        }*/
         
         public IEnumerable<Account> FindAll(int? organizationId, int? group, int? accountType)
         {
-            var allAccounts = this.dbContext.Accounts.AsQueryable();
+            var allAccounts = this.DbContext.Accounts.AsQueryable();
             
             if(group.HasValue)
             {

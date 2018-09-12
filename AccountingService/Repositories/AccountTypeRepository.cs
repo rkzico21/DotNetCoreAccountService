@@ -8,16 +8,17 @@ namespace AccountingService.Repositories
     using AccountingService.Entities;
     using Microsoft.EntityFrameworkCore;
 
-    public class AccountTypeRepository
+    public class AccountTypeRepository : RepositoryBase<AccountType>
     {
         private readonly AccountingDbContext dbContext;
 
         public AccountTypeRepository(AccountingDbContext dbContext)
+            : base(dbContext)
         {
-            this.dbContext = dbContext;       
+        
         }
 
-        public AccountType Add(AccountType accountType) 
+        /*public AccountType Add(AccountType accountType) 
         {
             this.dbContext.AccountTypes.Add(accountType);
             this.dbContext.SaveChanges();
@@ -29,7 +30,7 @@ namespace AccountingService.Repositories
             var queryble = this.GetAccountsTypeQueryble();
             return queryble.FirstOrDefault(a => a.Id == id);
         }
-        
+        */
         public IEnumerable<AccountType> FindAll(int? organizationId, int? group, bool includeAccounts = false)
         {
             var allAccountTypes = this.GetAccountsTypeQueryble(includeAccounts);

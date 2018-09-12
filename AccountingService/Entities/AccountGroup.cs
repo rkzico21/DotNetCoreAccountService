@@ -4,13 +4,8 @@ namespace AccountingService.Entities
     using System.ComponentModel.DataAnnotations.Schema;
 
     [Table("account_groups")]
-    public class AccountGroup
+    public class AccountGroup : EntityBase
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]   
-        [Column("id")]
-        public int Id {get; set;}
-        
         [Required]
         [Column("name")]
         public string Name { get; set; }
