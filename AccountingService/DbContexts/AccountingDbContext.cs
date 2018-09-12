@@ -32,6 +32,8 @@ namespace AccountingService.DbContexts
         public DbSet<AccountGroup> AccountGroups { get; set;}
         
         public DbSet<AccountType> AccountTypes { get; set;}
+
+        public DbSet<Organization> Organizations { get; set;}
         
         public DbSet<Transaction> Transactions { get; set;}
 
@@ -62,6 +64,10 @@ namespace AccountingService.DbContexts
 
             modelBuilder.Entity<Account>().HasData(
                 new Account{Id = 1, Name = "Cash at Hand", GroupId=1, AccountTypeId = 1 } 
+            );
+
+            modelBuilder.Entity<Organization>().HasData(
+                new Organization{Id = 1, Name = "Organization 1" } 
             );
        }
 

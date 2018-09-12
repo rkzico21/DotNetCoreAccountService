@@ -44,6 +44,10 @@ namespace AccountingService.Repositories
             
             }
             
+<<<<<<< HEAD
+=======
+            
+>>>>>>> 43dcf2b3ce1251bd9774ddf710fb4b77a0808073
             return allTransactions.AsEnumerable();
         } 
     }

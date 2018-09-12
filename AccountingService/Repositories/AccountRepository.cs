@@ -31,7 +31,7 @@ namespace AccountingService.Repositories
 
         public IEnumerable<Account> FindAll()
         {
-            return this.dbContext.Accounts.ToList();
+            return this.dbContext.Accounts.AsEnumerable();
         }
 
         public Account FindById(int id)

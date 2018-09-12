@@ -24,7 +24,14 @@ namespace AccountingService.Repositories
             return accountGroup;
         }
         
+<<<<<<< HEAD
         
+=======
+        public IEnumerable<AccountGroup> FindAll()
+        {
+            return this.dbContext.AccountGroups.AsEnumerable();
+        }
+>>>>>>> 43dcf2b3ce1251bd9774ddf710fb4b77a0808073
         
         public AccountGroup FindById(int id)
         {

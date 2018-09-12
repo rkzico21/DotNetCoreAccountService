@@ -1,12 +1,12 @@
-using System;
-using System.Collections.Generic;
-using AccountingService.Entities;
-using AccountingService.Exceptions;
-using AccountingService.Repositories;
-using Microsoft.Extensions.Logging;
-
 namespace AccountingService.Services
 {
+    using System;
+    using System.Collections.Generic;
+    using AccountingService.Entities;
+    using AccountingService.Exceptions;
+    using AccountingService.Repositories;
+    using Microsoft.Extensions.Logging;
+
     public class TransactionService
     {
         private readonly TransactionRepository repository;
