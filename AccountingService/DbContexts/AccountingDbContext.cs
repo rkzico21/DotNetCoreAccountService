@@ -18,6 +18,7 @@ namespace AccountingService.DbContexts
             this.DbSets.Add(typeof(AccountGroup), AccountGroups);
             this.DbSets.Add(typeof(AccountType), AccountTypes);
             this.DbSets.Add(typeof(Transaction), Transactions);
+            this.DbSets.Add(typeof(Organization), Organizations);
         }
 
 

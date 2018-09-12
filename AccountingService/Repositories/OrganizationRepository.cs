@@ -5,15 +5,15 @@ namespace AccountingService.Repositories
     using System.Linq;
     using AccountingService.DbContexts;
     using AccountingService.Entities;
-    public class OrganizationRepository
+    public class OrganizationRepository : RepositoryBase<Organization>
     {
         private readonly AccountingDbContext dbContext;
 
-        public OrganizationRepository(AccountingDbContext dbContext)
+        public OrganizationRepository(AccountingDbContext dbContext) 
+            : base(dbContext)
         {
-            this.dbContext = dbContext;
         }
-
+        /* 
         public IEnumerable<Organization> FindAll()
         {
             return this.dbContext.Organizations.AsEnumerable();
@@ -32,10 +32,7 @@ namespace AccountingService.Repositories
 
         }
 
-        public Organization Update(Organization organization)
-        {
-            throw new NotImplementedException();
-        }
+       
 
         public void Delete(int id)
         {
@@ -45,6 +42,11 @@ namespace AccountingService.Repositories
                 this.dbContext.Organizations.Remove(organization);
                 this.dbContext.SaveChanges();
             }
+        }*/
+
+        public Organization Update(Organization organization)
+        {
+            throw new NotImplementedException();
         }
     }
 }
