@@ -19,6 +19,7 @@ namespace AccountingService.DbContexts
             this.DbSets.Add(typeof(AccountType), AccountTypes);
             this.DbSets.Add(typeof(Transaction), Transactions);
             this.DbSets.Add(typeof(Organization), Organizations);
+            this.DbSets.Add(typeof(User), Users);
         }
 
 
@@ -38,11 +39,14 @@ namespace AccountingService.DbContexts
         
         public DbSet<Transaction> Transactions { get; set;}
 
+        public DbSet<User> Users { get; set; }
+
 
 
        protected override void  OnModelCreating(ModelBuilder modelBuilder)
        {
            modelBuilder.Entity<AccountType>().HasMany(t => t.Accounts );
+           
 
            modelBuilder.Entity<AccountGroup>().HasData(
                new AccountGroup{ Id=1, Name = "Assets"}, 
@@ -67,9 +71,34 @@ namespace AccountingService.DbContexts
                 new Account{Id = 1, Name = "Cash at Hand", GroupId=1, AccountTypeId = 1 } 
             );
 
-            modelBuilder.Entity<Organization>().HasData(
-                new Organization{Id = 1, Name = "Organization 1" } 
+            
+
+
+            modelBuilder.Entity<User>().HasData(
+                new User{Id =1, Name = "User 1", Email="user1@example.com", Password = "123456"}    
             );
+
+            modelBuilder.Entity<User>().HasData(
+                new User{Id =2, Name = "User 2", Email="user2@example.com", Password = "123456"}    
+            );
+
+            modelBuilder.Entity<User>().HasData(
+                new User{Id =3, Name = "User 3", Email="user3@example.com", Password = "123456"}    
+            );
+
+            modelBuilder.Entity<Organization>().HasData(
+                new Organization{Id = 1, Name = "Organization 1",  OwnerId = 1} 
+            );
+
+            modelBuilder.Entity<Organization>().HasData(
+                new Organization{Id = 2, Name = "Organization 2", OwnerId = 2 } 
+            );
+
+            modelBuilder.Entity<Organization>().HasData(
+                new Organization{Id = 3, Name = "Organization 3", OwnerId = 3 } 
+            );
+
+
        }
 
     }

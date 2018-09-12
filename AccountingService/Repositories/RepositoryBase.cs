@@ -38,6 +38,11 @@ namespace AccountingService.Repositories
                 this.dbContext.SaveChanges();
              }
         }
+
+        public IEnumerable<T> FindAll()
+        {
+            return this.dbContext.GetDbSet<T>(typeof(T)).AsEnumerable();
+        }
         
         public T FindById(int id)
         {

@@ -37,18 +37,14 @@ namespace AccountingService.Repositories
 
         public IEnumerable<Transaction> FindAll(int? organizationId)
         {
-            var allTransactions = this.dbContext.Transactions.AsQueryable();
+            var allTransactions = this.DbContext.Transactions.AsQueryable();
             
             if(organizationId.HasValue)
             {
             
             }
             
-<<<<<<< HEAD
-=======
-            
->>>>>>> 43dcf2b3ce1251bd9774ddf710fb4b77a0808073
-            return allTransactions.AsEnumerable();
+             return allTransactions.AsEnumerable();
         } 
     }
 }

@@ -3,8 +3,8 @@ namespace AccountingService.Entities
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
-    [Table("organizations")]
-    public class Organization : EntityBase
+    [Table("users")]
+    public class User : EntityBase
     {
 
         [Required]
@@ -12,8 +12,11 @@ namespace AccountingService.Entities
         public string Name { get; set; }
 
         [Required]
-        [Column("owner_id")]
-        public int? OwnerId {get; set;}
+        [Column("email")]
+        public string Email { get; set; }
 
+        [Required]
+        [Column("password")]
+        public string Password { get; set; }
     }
 }
