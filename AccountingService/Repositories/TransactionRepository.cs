@@ -44,7 +44,7 @@ namespace AccountingService.Repositories
             
             }
             
-            return allTransactions.ToList();
+            return allTransactions.AsEnumerable();
         } 
     }
 }

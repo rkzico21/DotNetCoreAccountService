@@ -33,7 +33,7 @@ namespace AccountingService.Repositories
 
         public IEnumerable<AccountGroup> FindAll()
         {
-            return this.DbContext.AccountGroups.ToList();
+            return this.DbContext.AccountGroups.AsEnumerable();
         }
     }
 }

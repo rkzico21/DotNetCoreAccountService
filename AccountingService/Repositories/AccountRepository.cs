@@ -53,7 +53,7 @@ namespace AccountingService.Repositories
                 allAccounts = allAccounts.Where(a=>a.AccountTypeId == accountType.Value);
             }
             
-            return allAccounts.ToList();
+            return allAccounts.AsEnumerable();
         } 
     }
 }
