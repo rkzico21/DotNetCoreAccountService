@@ -1,7 +1,8 @@
-namespace AccountingService.Entities
+namespace AccountingService.Authentication
 {
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    using AccountingService.Entities;
 
     public class LoginModel 
     {
@@ -18,5 +19,7 @@ namespace AccountingService.Entities
         public string Token { get; set; }
         
         public User User { get; set; }
+
+        public int OrganizationId {get; set;}
     }
 }
