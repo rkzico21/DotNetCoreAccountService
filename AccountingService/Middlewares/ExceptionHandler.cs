@@ -41,7 +41,11 @@ namespace AccountingService.Middlewares
         {
             code = HttpStatusCode.NotFound;
         }
-        
+        else if(exception is NotAuthorizedException)
+        {
+            code = HttpStatusCode.Unauthorized;
+        }
+
         logger.LogError(exception, exception.Message); 
         
         var message = code == HttpStatusCode.InternalServerError ? "Internal Server Error" : exception.Message;

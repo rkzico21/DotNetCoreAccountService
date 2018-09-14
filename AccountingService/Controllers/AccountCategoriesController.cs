@@ -7,10 +7,12 @@ namespace AccountingService
     using System.Threading.Tasks;
     using AccountingService.Entities;
     using AccountingService.Services;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     [Route("api/accountcategory")]
     [ApiController]
+    [Authorize]
     public class AccountCategoriesController : ControllerBase
     {
         private AccountService accountService;

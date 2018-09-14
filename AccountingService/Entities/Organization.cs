@@ -10,10 +10,5 @@ namespace AccountingService.Entities
         [Required]
         [Column("name")]
         public string Name { get; set; }
-
-        [Required]
-        [Column("owner_id")]
-        public int? OwnerId {get; set;}
-
     }
 }

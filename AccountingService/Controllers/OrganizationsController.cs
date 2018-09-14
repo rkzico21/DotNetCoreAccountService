@@ -7,11 +7,13 @@ namespace AccoutingService.Controllers
     using AccountingService.Entities;
     using AccountingService.Filetes;
     using AccountingService.Services;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
 
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class OrganizationsController : ControllerBase
     {
 

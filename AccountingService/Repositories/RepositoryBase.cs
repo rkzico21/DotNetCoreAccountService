@@ -51,8 +51,15 @@ namespace AccountingService.Repositories
        
         private void AssignId(T entity)
         {
-            var value = this.dbContext.GetDbSet<T>(typeof(T)).Max(e=>e.Id);
-            entity.Id = value +1;
+            try
+            {
+                var value = this.dbContext.GetDbSet<T>(typeof(T)).Max(e=>e.Id);
+                entity.Id = value + 1 ;
+            }
+            catch(Exception ex)
+            {
+                entity.Id = 1;
+            }
             
         }
     }

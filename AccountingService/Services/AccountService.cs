@@ -12,9 +12,9 @@ namespace AccountingService.Services
     {
         private readonly AccountRepository repository;
         private readonly AccountGroupRepository accountGroupRepository;
-
+        
         private readonly AccountTypeRepository accountTypeRepository;
-
+        
         private readonly ILogger logger;
         
         public AccountService(AccountRepository repository, AccountGroupRepository accountGroupRepository, AccountTypeRepository accountTypeRepository, ILogger<AccountService> logger)
@@ -30,7 +30,7 @@ namespace AccountingService.Services
              return repository.FindAll(organizationId, group, accountType);
         }
 
-        public Account CreateAccount(Account account)
+        public Account CreateAccount(Account account, int organizationId)
         {
             var accountType = this.accountTypeRepository.FindById(account.AccountTypeId.Value);
             if(accountType == null)
@@ -39,6 +39,7 @@ namespace AccountingService.Services
             }
             
             account.GroupId = accountType.GroupId; //make sure correct group id has been assigned.
+            account.OrganizationId = organizationId;
             return this.repository.Add(account);
         }
         
@@ -67,7 +68,7 @@ namespace AccountingService.Services
 
         public IEnumerable<AccountType> GetAccountTypes(int? organizationId, int? groupId)
         {
-            return this.accountTypeRepository.FindAll(organizationId, groupId, true);
+            return this.accountTypeRepository.FindAll(groupId, true , organizationId);
         }
      }
 }

@@ -13,31 +13,6 @@ namespace AccountingService.Repositories
         {
                    
         }
-
-        /* 
-        public Account Add(Account account) 
-        {
-            this.dbContext.Accounts.Add(account);
-            this.dbContext.SaveChanges();
-            return account;
-        }
-        
-        public void Delete(int id)
-        {
-             var account = this.FindById(id);
-             this.dbContext.Accounts.Remove(account);
-             this.dbContext.SaveChanges();
-        }
-
-        public IEnumerable<Account> FindAll()
-        {
-            return this.dbContext.Accounts.AsEnumerable();
-        }
-
-        public Account FindById(int id)
-        {
-            return this.dbContext.Accounts.FirstOrDefault(a => a.Id == id);
-        }*/
         
         public IEnumerable<Account> FindAll(int? organizationId, int? group, int? accountType)
         {
@@ -51,6 +26,11 @@ namespace AccountingService.Repositories
             if(accountType.HasValue)
             {
                 allAccounts = allAccounts.Where(a=>a.AccountTypeId == accountType.Value);
+            }
+
+            if(organizationId.HasValue)
+            {
+                allAccounts = allAccounts.Where(a => a.OrganizationId == organizationId.Value);
             }
             
             return allAccounts.AsEnumerable();

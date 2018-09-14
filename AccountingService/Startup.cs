@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AccountingService.Authentication;
 using AccountingService.DbContexts;
+using AccountingService.Entities;
 using AccountingService.Filetes;
 using AccountingService.Helpers;
 using AccountingService.Middlewares;
@@ -15,6 +16,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -50,6 +52,7 @@ namespace AccountingService
                 });
 
             
+            services.AddScoped<PasswordHasher<User>, PasswordHasher<User>>();
 
             services.AddDbContext<AccountingDbContext>(opt => opt.UseInMemoryDatabase("AccountingDb"));
             /*services.AddDbContext<AccountingDbContext>(opt => 
@@ -124,6 +127,7 @@ namespace AccountingService
             this.SeedData(app);
 
             app.UseMiddleware(typeof(ExceptionHandler));
+            app.UseAuthentication();
             //app.UseHttpsRedirection();
             app.UseMvc();
         }

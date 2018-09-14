@@ -21,6 +21,9 @@ namespace AccountingService.Entities
 
         [Column("group_id")]
         public int GroupId { get; set; }
+
+        [Column("organization_id")]
+        public int OrganizationId { get; set;}
     
     }
 

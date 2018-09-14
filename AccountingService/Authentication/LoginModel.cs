@@ -19,7 +19,5 @@ namespace AccountingService.Authentication
         public string Token { get; set; }
         
         public User User { get; set; }
-
-        public int OrganizationId {get; set;}
     }
 }

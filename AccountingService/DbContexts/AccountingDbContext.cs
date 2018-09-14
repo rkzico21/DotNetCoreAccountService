@@ -5,12 +5,15 @@ namespace AccountingService.DbContexts
     using Microsoft.EntityFrameworkCore;
     using System.Collections;
     using System.Collections.Generic;
+    using Microsoft.AspNetCore.Identity;
 
     public class AccountingDbContext : DbContext
     {
         
         private readonly Dictionary<Type, Object> DbSets;
-        public AccountingDbContext(DbContextOptions<AccountingDbContext> options)
+        private readonly PasswordHasher<User> passwordHasher;
+
+        public AccountingDbContext(DbContextOptions<AccountingDbContext> options, PasswordHasher<User> passwordHasher)
             : base(options)
         {
             this.DbSets = new Dictionary<Type, Object>();
@@ -20,6 +23,7 @@ namespace AccountingService.DbContexts
             this.DbSets.Add(typeof(Transaction), Transactions);
             this.DbSets.Add(typeof(Organization), Organizations);
             this.DbSets.Add(typeof(User), Users);
+            this.passwordHasher = passwordHasher;
         }
 
 
@@ -40,13 +44,12 @@ namespace AccountingService.DbContexts
         public DbSet<Transaction> Transactions { get; set;}
 
         public DbSet<User> Users { get; set; }
-
-
-
-       protected override void  OnModelCreating(ModelBuilder modelBuilder)
-       {
-           modelBuilder.Entity<AccountType>().HasMany(t => t.Accounts );
-           
+        
+        protected override void  OnModelCreating(ModelBuilder modelBuilder)
+        {
+           modelBuilder.Entity<AccountType>().HasMany(t => t.Accounts);
+           modelBuilder.Entity<User>().HasOne(u=>u.Organization);
+               
 
            modelBuilder.Entity<AccountGroup>().HasData(
                new AccountGroup{ Id=1, Name = "Assets"}, 
@@ -67,39 +70,39 @@ namespace AccountingService.DbContexts
                );
 
 
-            modelBuilder.Entity<Account>().HasData(
-                new Account{Id = 1, Name = "Cash at Hand", GroupId=1, AccountTypeId = 1 } 
+            modelBuilder.Entity<Organization>().HasData(
+                new Organization{Id = 1, Name = "Organization 1"} 
             );
+
+            modelBuilder.Entity<Organization>().HasData(
+                new Organization{Id = 2, Name = "Organization 2" } 
+            );
+
 
             
-
-
-            modelBuilder.Entity<User>().HasData(
-                new User{Id =1, Name = "User 1", Email="user1@example.com", Password = "123456"}    
-            );
-
-            modelBuilder.Entity<User>().HasData(
-                new User{Id =2, Name = "User 2", Email="user2@example.com", Password = "123456"}    
-            );
-
-            modelBuilder.Entity<User>().HasData(
-                new User{Id =3, Name = "User 3", Email="user3@example.com", Password = "123456"}    
-            );
-
             modelBuilder.Entity<Organization>().HasData(
-                new Organization{Id = 1, Name = "Organization 1",  OwnerId = 1} 
-            );
-
-            modelBuilder.Entity<Organization>().HasData(
-                new Organization{Id = 2, Name = "Organization 2", OwnerId = 2 } 
-            );
-
-            modelBuilder.Entity<Organization>().HasData(
-                new Organization{Id = 3, Name = "Organization 3", OwnerId = 3 } 
+                new Organization{Id = 3, Name = "Organization 3"} 
             );
 
 
-       }
+            modelBuilder.Entity<Account>().HasData(
+                new Account{Id = 1, Name = "Cash at Hand", GroupId=1, AccountTypeId = 1, OrganizationId=1 } 
+            );
+
+            modelBuilder.Entity<Account>().HasData(
+                new Account{Id = 2, Name = "Cash at Bank", GroupId=1, AccountTypeId = 1, OrganizationId=2 } 
+            );
+            
+            var user1 = new User{Id =1, Name = "User 1", Email="user1@Organization1.com", Password = "123456", OrganizationId=1};
+            var user2 = new User{Id =2, Name = "User 2", Email="user2@Organization2.com", Password = "123456", OrganizationId=2};    
+            var user3 = new User{Id =3, Name = "User 3", Email="user3@Organization3.com", Password = "123456", OrganizationId=3};  
+            
+            user1.Password =  passwordHasher.HashPassword(user1, user1.Password);
+            user2.Password =  passwordHasher.HashPassword(user1, user2.Password);
+            user3.Password =  passwordHasher.HashPassword(user1, user3.Password);
+            
+            modelBuilder.Entity<User>().HasData(user1,user2,user3);
+        }
 
     }
 

@@ -43,8 +43,7 @@ namespace AccountingService.Services
 
         public Organization UpdateOrganization(int id, Organization organization)
         {
-            var existingOrganization = this.GetOrganization(id);
-            return this.repository.Update(organization);
+            throw new NotImplementedException();
         }
         
         public void Delete(int id)

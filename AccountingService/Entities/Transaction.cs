@@ -4,6 +4,7 @@ namespace AccountingService.Entities
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    using Newtonsoft.Json;
 
     [Table("transactions")]
     public class Transaction : EntityBase
@@ -26,6 +27,12 @@ namespace AccountingService.Entities
         [DataType(DataType.Date)]
         [Column("transaction_date")]
         public DateTime? TransactionDate { get; set; }
+
+
+        [JsonIgnore]
+        [Column("organization_id")]
+        public int? OrganizationId { get; set; }
+
 
         //TODO: add other category. or categories
     }

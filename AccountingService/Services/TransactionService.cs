@@ -58,6 +58,7 @@ namespace AccountingService.Services
                 transaction.TransactionDate = DateTime.Now;
             }
 
+            transaction.OrganizationId = account.OrganizationId; 
             return repository.Add(transaction);
         }
 

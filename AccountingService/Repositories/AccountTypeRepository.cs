@@ -10,28 +10,14 @@ namespace AccountingService.Repositories
 
     public class AccountTypeRepository : RepositoryBase<AccountType>
     {
-        private readonly AccountingDbContext dbContext;
-
         public AccountTypeRepository(AccountingDbContext dbContext)
             : base(dbContext)
         {
         
         }
 
-        /*public AccountType Add(AccountType accountType) 
-        {
-            this.dbContext.AccountTypes.Add(accountType);
-            this.dbContext.SaveChanges();
-            return accountType;
-        }
-        
-        public AccountType FindById(int id)
-        {
-            var queryble = this.GetAccountsTypeQueryble();
-            return queryble.FirstOrDefault(a => a.Id == id);
-        }
-        */
-        public IEnumerable<AccountType> FindAll(int? organizationId, int? group, bool includeAccounts = false)
+       
+        public IEnumerable<AccountType> FindAll(int? group, bool includeAccounts, int? organizationId)
         {
             var allAccountTypes = this.GetAccountsTypeQueryble(includeAccounts);
             
@@ -40,13 +26,23 @@ namespace AccountingService.Repositories
                 allAccountTypes = allAccountTypes.Where(a=>a.GroupId == group);
             }
             
-            return allAccountTypes.AsEnumerable();
+            var types = allAccountTypes.AsEnumerable();
+
+            if(organizationId.HasValue)
+            {
+                foreach(var type in types)
+                {
+                    type.Accounts = type.Accounts.Where(a=>a.OrganizationId == organizationId.Value).ToList();
+                }
+            }
+
+            return types;
         } 
 
 
-        private IQueryable<AccountType> GetAccountsTypeQueryble(bool includeAccounts = false)
+        private IQueryable<AccountType> GetAccountsTypeQueryble(bool includeAccounts)
         {
-             var queryble = this.dbContext.AccountTypes.AsQueryable();
+             var queryble = this.DbContext.AccountTypes.AsQueryable();
              if(includeAccounts)
              {
                 queryble = queryble.Include(t=>t.Accounts);
