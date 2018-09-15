@@ -1,9 +1,12 @@
 
-
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using AccountingService.DbContexts;
+using AccountingService.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -98,7 +101,9 @@ namespace AccountingService.Filetes
         {
             if(context.Resource is AuthorizationFilterContext mvcContext)
             {
-                if(mvcContext.HttpContext.Request.Method == HttpMethods.Get || mvcContext.HttpContext.Request.Method == HttpMethods.Delete)
+                var request = mvcContext.HttpContext.Request;
+                int? organizationId = null;
+                if(request.Method == HttpMethods.Get || request.Method == HttpMethods.Delete || request.Method == HttpMethods.Put)
                 {
                     var routeDate = mvcContext.RouteData;
                     if(routeDate.Values.ContainsKey("id"))
@@ -106,19 +111,59 @@ namespace AccountingService.Filetes
                         int id;
                         int.TryParse(routeDate.Values["id"].ToString(), out id); 
                         var transaction = this.dbContext.Transactions.FirstOrDefault(a=>a.Id == id);
-                        
-                        if(transaction != null && !context.User.HasClaim(c=>c.Type == "Organization" && c.Value == transaction.OrganizationId.ToString()))
-                        {
-                            context.Fail();
-                            return Task.CompletedTask;
-                        }   
+                        organizationId = transaction?.OrganizationId;
                     }
                 }
-             }
+                
+                if(request.Method == HttpMethods.Post || request.Method == HttpMethods.Put)
+                {
+                    request.EnableBuffering();
+                    try
+                    {
+                        using(var reader = new StreamReader(request.Body, Encoding.UTF8))
+                        {
+                            var response = reader.ReadToEnd();
+                            var transaction = JsonConvert.DeserializeObject(response, typeof(Transaction)) as Transaction;
+                            if(transaction != null)
+                            {
+                                organizationId = dbContext.Accounts.FirstOrDefault(a=>a.Id == transaction.AccountId)?.OrganizationId;
+                                if(organizationId.HasValue && IsUserOrganizationDiffrent(context, organizationId.Value))
+                                {
+                                    return Task.CompletedTask;
+                                }
+                            }
 
+                            request.Body.Position = 0;
+                        }
+                    }
+                    catch(Exception ex)
+                    {
+                            //TODO: log error
+                    }
+                }
+
+                if(organizationId.HasValue && IsUserOrganizationDiffrent(context, organizationId.Value))
+                {
+                    return Task.CompletedTask;
+                }
+            }
+            
             context.Succeed(requirement); 
             return Task.CompletedTask;
         }
+
+        private bool IsUserOrganizationDiffrent(AuthorizationHandlerContext context, int organizationId)
+        {
+            if(!context.User.HasClaim(c => c.Type == "Organization" && c.Value == organizationId.ToString()))
+            {
+                context.Fail();
+                return true;
+            }
+
+            return false;
+        }
+
+        
     }
 
     public class AccountAccessHandler : AuthorizationHandler<AccountAccessRequirement>
