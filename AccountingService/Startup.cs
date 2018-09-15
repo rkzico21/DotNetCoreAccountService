@@ -12,6 +12,7 @@ using AccountingService.Middlewares;
 using AccountingService.Repositories;
 using AccountingService.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -100,6 +101,15 @@ namespace AccountingService
                     ValidateAudience = false
                 };
             });
+
+            services.AddAuthorization(
+                options => {
+                    options.AddPolicy("AccountAccessPolicy", policy =>
+                    policy.Requirements.Add(new AccountAccessRequirement()));
+                }   
+            );
+
+            services.AddScoped<IAuthorizationHandler, AccountAccessHandler>();
 
            /* services.AddHttpsRedirection(options =>
             {

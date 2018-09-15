@@ -25,7 +25,7 @@ namespace AccountingService.Services
         public Transaction GetTransaction(int id)
         {
             var transaction = repository.FindById(id);
-             if(transaction == null)
+            if(transaction == null)
             {
                 var message = $"Transaction with id: {id} not found";
                 logger.LogWarning(message);

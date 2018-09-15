@@ -2,9 +2,13 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using AccountingService.DbContexts;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Newtonsoft.Json;
 
@@ -67,5 +71,47 @@ namespace AccountingService.Filetes
             this.Message = message;
         }
         
+    }
+
+    public class AccountAccessRequirement :  IAuthorizationRequirement
+    {
+
+    }
+
+    public class AccountAccessHandler : AuthorizationHandler<AccountAccessRequirement>
+    {
+        private readonly AccountingDbContext dbContext;
+
+        public AccountAccessHandler(AccountingDbContext dbContext)
+        {
+            this.dbContext = dbContext;
+        }
+
+        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, AccountAccessRequirement requirement)
+        {
+            //Get organizationn id 
+            if(context.Resource is AuthorizationFilterContext mvcContext)
+            {
+                if(mvcContext.HttpContext.Request.Method == HttpMethods.Get || mvcContext.HttpContext.Request.Method == HttpMethods.Delete)
+                {
+                    var routeDate = mvcContext.RouteData;
+                    if(routeDate.Values.ContainsKey("id"))
+                    {
+                        int id;
+                        int.TryParse(routeDate.Values["id"].ToString(), out id); 
+                        var account = this.dbContext.Accounts.FirstOrDefault(a=>a.Id == id);
+                        
+                        if(account != null && !context.User.HasClaim(c=>c.Type == "Organization" && c.Value == account.Id.ToString()))
+                        {
+                            context.Fail();
+                            return Task.CompletedTask;
+                        }   
+                    }
+                }
+             }
+
+            context.Succeed(requirement); 
+            return Task.CompletedTask;
+        }
     }
 }

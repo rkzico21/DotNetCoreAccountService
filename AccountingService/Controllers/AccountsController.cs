@@ -16,7 +16,7 @@ namespace AccountingService
 
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize(Policy="AccountAccessPolicy")]
     public class AccountsController : ControllerBase
     {
         private AccountService accountService;
