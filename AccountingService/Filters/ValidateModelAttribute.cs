@@ -120,8 +120,9 @@ namespace AccountingService.Filetes
                     request.EnableBuffering();
                     try
                     {
-                        using(var reader = new StreamReader(request.Body, Encoding.UTF8))
+                        using(var reader = new StreamReader(request.Body, Encoding.UTF8, false, 256, true))
                         {
+                            
                             var response = reader.ReadToEnd();
                             var transaction = JsonConvert.DeserializeObject(response, typeof(Transaction)) as Transaction;
                             if(transaction != null)

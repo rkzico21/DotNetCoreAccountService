@@ -45,7 +45,7 @@ namespace AccountingService
         
         [HttpPost]
         [ValidateModel]
-        public IActionResult  CreateAccount([FromBody] Transaction newTransaction)
+        public IActionResult  CreateTransaction([FromBody] Transaction newTransaction)
         {
             var transaction =  transactionService.CreateTransaction(newTransaction);
             return CreatedAtRoute("GetTransaction", new { id = transaction.Id }, transaction);
