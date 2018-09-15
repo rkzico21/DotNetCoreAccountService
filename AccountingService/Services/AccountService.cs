@@ -48,7 +48,7 @@ namespace AccountingService.Services
             this.repository.Delete(id);
         }
 
-        public Account GetAccount(int id, int organizationId)
+        public Account GetAccount(int id)
         {
             var account = this.repository.FindById(id);
             if(account == null)
