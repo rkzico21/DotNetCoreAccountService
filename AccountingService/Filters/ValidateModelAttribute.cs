@@ -73,9 +73,52 @@ namespace AccountingService.Filetes
         
     }
 
+
+    public class TransactionAccessRequirement: IAuthorizationRequirement
+    {
+
+    }
+
     public class AccountAccessRequirement :  IAuthorizationRequirement
     {
 
+    }
+
+
+    public class TransactionAccessHandler : AuthorizationHandler<TransactionAccessRequirement>
+    {
+        private readonly AccountingDbContext dbContext;
+        
+        public TransactionAccessHandler(AccountingDbContext dbContext)
+        {
+            this.dbContext = dbContext;
+        }
+        
+        protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, TransactionAccessRequirement requirement)
+        {
+            if(context.Resource is AuthorizationFilterContext mvcContext)
+            {
+                if(mvcContext.HttpContext.Request.Method == HttpMethods.Get || mvcContext.HttpContext.Request.Method == HttpMethods.Delete)
+                {
+                    var routeDate = mvcContext.RouteData;
+                    if(routeDate.Values.ContainsKey("id"))
+                    {
+                        int id;
+                        int.TryParse(routeDate.Values["id"].ToString(), out id); 
+                        var transaction = this.dbContext.Transactions.FirstOrDefault(a=>a.Id == id);
+                        
+                        if(transaction != null && !context.User.HasClaim(c=>c.Type == "Organization" && c.Value == transaction.OrganizationId.ToString()))
+                        {
+                            context.Fail();
+                            return Task.CompletedTask;
+                        }   
+                    }
+                }
+             }
+
+            context.Succeed(requirement); 
+            return Task.CompletedTask;
+        }
     }
 
     public class AccountAccessHandler : AuthorizationHandler<AccountAccessRequirement>
@@ -101,7 +144,7 @@ namespace AccountingService.Filetes
                         int.TryParse(routeDate.Values["id"].ToString(), out id); 
                         var account = this.dbContext.Accounts.FirstOrDefault(a=>a.Id == id);
                         
-                        if(account != null && !context.User.HasClaim(c=>c.Type == "Organization" && c.Value == account.Id.ToString()))
+                        if(account != null && !context.User.HasClaim(c=>c.Type == "Organization" && c.Value == account.OrganizationId.ToString()))
                         {
                             context.Fail();
                             return Task.CompletedTask;

@@ -49,7 +49,7 @@ namespace AccountingService.DbContexts
         {
            modelBuilder.Entity<AccountType>().HasMany(t => t.Accounts);
            modelBuilder.Entity<User>().HasOne(u=>u.Organization);
-               
+           modelBuilder.Entity<Transaction>().HasOne(t=>t.Account);
 
            modelBuilder.Entity<AccountGroup>().HasData(
                new AccountGroup{ Id=1, Name = "Assets"}, 
@@ -89,9 +89,18 @@ namespace AccountingService.DbContexts
                 new Account{Id = 1, Name = "Cash at Hand", GroupId=1, AccountTypeId = 1, OrganizationId=1 } 
             );
 
-            modelBuilder.Entity<Account>().HasData(
-                new Account{Id = 2, Name = "Cash at Bank", GroupId=1, AccountTypeId = 1, OrganizationId=2 } 
+            modelBuilder.Entity<Transaction>().HasData(
+                new Transaction{ Id=1, AccountId= 1, OrganizationId = 1, TransactionTypeId =1, TransactionDate = DateTime.Now }
             );
+
+            modelBuilder.Entity<Account>().HasData(
+                new Account{Id = 2, Name = "Cash at Bank", GroupId=1, AccountTypeId = 1 ,OrganizationId=2 } 
+            );
+
+            modelBuilder.Entity<Transaction>().HasData(
+                new Transaction{ Id=2, AccountId= 2, OrganizationId = 2, TransactionTypeId =1 ,TransactionDate = DateTime.Now }
+            );
+
             
             var user1 = new User{Id =1, Name = "User 1", Email="user1@Organization1.com", Password = "123456", OrganizationId=1};
             var user2 = new User{Id =2, Name = "User 2", Email="user2@Organization2.com", Password = "123456", OrganizationId=2};    

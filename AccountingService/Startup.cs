@@ -106,10 +106,14 @@ namespace AccountingService
                 options => {
                     options.AddPolicy("AccountAccessPolicy", policy =>
                     policy.Requirements.Add(new AccountAccessRequirement()));
+
+                    options.AddPolicy("TransactionAccessPolicy", policy =>
+                    policy.Requirements.Add(new TransactionAccessRequirement()));
                 }   
             );
 
             services.AddScoped<IAuthorizationHandler, AccountAccessHandler>();
+            services.AddScoped<IAuthorizationHandler, TransactionAccessHandler>();
 
            /* services.AddHttpsRedirection(options =>
             {
