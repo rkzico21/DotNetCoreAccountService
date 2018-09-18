@@ -11,7 +11,6 @@ namespace AccountingService.Repositories
                : base(dbContext)
         {
         }
-        
         public IEnumerable<Transaction> FindAll(int? organizationId)
         {
             var allTransactions = this.DbContext.Transactions.AsQueryable();
@@ -22,6 +21,11 @@ namespace AccountingService.Repositories
             }
             
              return allTransactions.AsEnumerable();
-        } 
+        }
+
+        public void LoadItems(JournalTransaction transaction)
+        {
+            this.DbContext.Entry(transaction).Collection(t=>t.Items).Load();
+        }  
     }
 }

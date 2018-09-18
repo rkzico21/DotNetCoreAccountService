@@ -25,11 +25,18 @@ namespace AccountingService.Services
         public Transaction GetTransaction(int id)
         {
             var transaction = repository.FindById(id);
+            
             if(transaction == null)
             {
                 var message = $"Transaction with id: {id} not found";
                 logger.LogWarning(message);
                 throw new ResourceNotFoundException(message); 
+            }
+
+            if(transaction is JournalTransaction journalTransaction)
+            {
+                this.repository.LoadItems(journalTransaction);
+                return journalTransaction;
             }
 
             return transaction;

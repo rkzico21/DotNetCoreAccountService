@@ -50,6 +50,9 @@ namespace AccountingService.DbContexts
            modelBuilder.Entity<AccountType>().HasMany(t => t.Accounts);
            modelBuilder.Entity<User>().HasOne(u=>u.Organization);
            modelBuilder.Entity<Transaction>().HasOne(t=>t.Account);
+           modelBuilder.Entity<JournalTransaction>().HasBaseType<Transaction>();
+           modelBuilder.Entity<TransactionItem>().HasOne(i => i.Transaction).
+                    WithMany(t=>t.Items).HasForeignKey(t=>t.TransactionId);
 
            modelBuilder.Entity<AccountGroup>().HasData(
                new AccountGroup{ Id=1, Name = "Assets"}, 
@@ -100,6 +103,18 @@ namespace AccountingService.DbContexts
             modelBuilder.Entity<Transaction>().HasData(
                 new Transaction{ Id=2, AccountId= 2, OrganizationId = 2, TransactionTypeId =1 ,TransactionDate = DateTime.Now }
             );
+
+            
+            modelBuilder.Entity<JournalTransaction>().HasData(
+                new JournalTransaction{ Id = 3, OrganizationId = 1, AccountId = 1,  TransactionDate = DateTime.Now}
+            );
+            
+            modelBuilder.Entity<TransactionItem>().HasData(
+                new TransactionItem {Id = 1, TransactionType = "credit", Amount = 100, TransactionId = 3 },
+                new TransactionItem {Id = 2, TransactionType = "debit", Amount = 100, TransactionId = 3}   
+            );
+
+            
 
             
             var user1 = new User{Id =1, Name = "User 1", Email="user1@Organization1.com", Password = "123456", OrganizationId=1};

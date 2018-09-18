@@ -16,7 +16,7 @@ namespace AccountingService.Entities
 
         [Required]
         [Column("account_id")]
-        public int? AccountId { get; set; }
+        public  int? AccountId { get; set; }
 
         [Column("amount")]
         public double Amount { get; set; }
@@ -36,6 +36,7 @@ namespace AccountingService.Entities
         
         [JsonIgnore]
         public Account Account {get; set;}
+        
         //TODO: add other category. or categories
     }
 }
