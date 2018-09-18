@@ -33,10 +33,13 @@ namespace AccountingService.Entities
         [Column("organization_id")]
         public int? OrganizationId { get; set; }
 
+        [Column("note")]
+        public string Note{get; set;}
         
         [JsonIgnore]
         public Account Account {get; set;}
-        
+
+   
         //TODO: add other category. or categories
     }
 }

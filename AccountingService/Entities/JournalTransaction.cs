@@ -18,8 +18,6 @@ namespace AccountingService.Entities
     
     }
 
-
-    [Table("transaction_items")]
     public class TransactionItem : EntityBase
     {
 
@@ -27,13 +25,25 @@ namespace AccountingService.Entities
         public int TransactionId {get; set;}
 
         [Column("type")]
+        [Required]
         public string TransactionType { get; set;}
 
         [Column("amount")]
         public Double  Amount {get; set;}
 
+        [Column("account_id")]
+        [Required]
+        public int?  AccountId {get; set;}
+
+        [JsonIgnore]
+        [Column("organization_id")]
+        public int? OrganizationId { get; set; }
+
         [JsonIgnore]
         public JournalTransaction Transaction {get; set;}
+
+        [JsonIgnore]
+        public Account Account {get; set;}
 
     }
 }

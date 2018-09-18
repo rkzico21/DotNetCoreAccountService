@@ -76,7 +76,7 @@ namespace AccountingService.Filetes
         
     }
 
-
+    //TODO: Create new file
     public class TransactionAccessRequirement: IAuthorizationRequirement
     {
 

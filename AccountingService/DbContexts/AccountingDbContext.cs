@@ -54,6 +54,7 @@ namespace AccountingService.DbContexts
            modelBuilder.Entity<TransactionItem>().HasOne(i => i.Transaction).
                     WithMany(t=>t.Items).HasForeignKey(t=>t.TransactionId);
 
+            
            modelBuilder.Entity<AccountGroup>().HasData(
                new AccountGroup{ Id=1, Name = "Assets"}, 
                new AccountGroup{ Id=2, Name = "Liabilities"}, 
@@ -110,8 +111,8 @@ namespace AccountingService.DbContexts
             );
             
             modelBuilder.Entity<TransactionItem>().HasData(
-                new TransactionItem {Id = 1, TransactionType = "credit", Amount = 100, TransactionId = 3 },
-                new TransactionItem {Id = 2, TransactionType = "debit", Amount = 100, TransactionId = 3}   
+                new TransactionItem {Id = 1, TransactionType = "credit", Amount = 100, TransactionId = 3, AccountId = 1, OrganizationId=1 },
+                new TransactionItem {Id = 2, TransactionType = "debit", Amount = 100, TransactionId = 3, AccountId =1, OrganizationId=1}   
             );
 
             
