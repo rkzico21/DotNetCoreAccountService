@@ -70,6 +70,9 @@ namespace AccountingService
             services.AddScoped<TransactionService, TransactionService>();
             services.AddScoped<OrganizationService, OrganizationService>();
             services.AddScoped<AuthenticationService, AuthenticationService>();
+            services.AddScoped<UserService, UserService>();
+            
+            
             services.AddDefaultAWSOptions(Configuration.GetAWSOptions());
             services.AddAWSService<Amazon.S3.IAmazonS3>();
             services.AddCors();
