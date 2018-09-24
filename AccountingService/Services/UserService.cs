@@ -36,19 +36,11 @@ namespace AccountingService.Services
              return User;
         }
 
-        public User CreateUser(User User)
-        {
-            return repository.Add(User);
-        }
+        public bool UserExists(string email) => this.GetUserByEmail(email) != null;
 
-        public User UpdateUser(int id, User User)
-        {
-            throw new NotImplementedException();
-        }
-        
-        public void Delete(int id)
-        {
-            this.repository.Delete(id);
-        }
+        public User GetUserByEmail(string email) => this.repository.FindUserByEmail(email);
+
+        public User CreateUser(User User) => repository.Add(User);
+    
     }
 }

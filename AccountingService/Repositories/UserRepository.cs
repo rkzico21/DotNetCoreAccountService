@@ -13,7 +13,5 @@ namespace AccountingService.Repositories
         }
 
         public User FindUserByEmail(string email) => this.DbContext.Users.FirstOrDefault(u => u.Email.Equals(email));
-
-
     }
 }

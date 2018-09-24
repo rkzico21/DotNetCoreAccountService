@@ -6,6 +6,7 @@ namespace AccountingService.DbContexts
     using System.Collections;
     using System.Collections.Generic;
     using Microsoft.AspNetCore.Identity;
+    using Microsoft.EntityFrameworkCore.Diagnostics;
 
     public class AccountingDbContext : DbContext
     {
@@ -44,6 +45,7 @@ namespace AccountingService.DbContexts
         public DbSet<Transaction> Transactions { get; set;}
 
         public DbSet<User> Users { get; set; }
+        
         
         protected override void  OnModelCreating(ModelBuilder modelBuilder)
         {

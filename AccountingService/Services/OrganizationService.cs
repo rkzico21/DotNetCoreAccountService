@@ -18,10 +18,7 @@ namespace AccountingService.Services
             this.logger = logger;
         }
 
-        public IEnumerable<Organization> GetOrganizations()
-        {
-             return this.repository.FindAll();
-        }
+        public IEnumerable<Organization> GetOrganizations() => this.repository.FindAll();
 
         public Organization GetOrganization(int id)
         {
@@ -33,22 +30,10 @@ namespace AccountingService.Services
                 throw new ResourceNotFoundException(message); 
              }
 
-             return organization;
+             return organization; 
         }
 
-        public Organization CreateOrganization(Organization organization)
-        {
-            return repository.Add(organization);
-        }
+        public Organization CreateOrganization(Organization organization, string ownerEmail) => repository.Add(organization, ownerEmail);
 
-        public Organization UpdateOrganization(int id, Organization organization)
-        {
-            throw new NotImplementedException();
-        }
-        
-        public void Delete(int id)
-        {
-            this.repository.Delete(id);
-        }
     }
 }

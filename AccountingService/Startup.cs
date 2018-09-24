@@ -9,6 +9,7 @@ using AccountingService.Entities;
 using AccountingService.Filetes;
 using AccountingService.Helpers;
 using AccountingService.Middlewares;
+using AccountingService.Models;
 using AccountingService.Repositories;
 using AccountingService.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -20,6 +21,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -53,9 +55,16 @@ namespace AccountingService
                 });
 
             
+            //TODO: create a new class to represent user.
             services.AddScoped<PasswordHasher<User>, PasswordHasher<User>>();
+            services.AddScoped<PasswordHasher<SignUpModel>, PasswordHasher<SignUpModel>>();
 
-            services.AddDbContext<AccountingDbContext>(opt => opt.UseInMemoryDatabase("AccountingDb"));
+            services.AddDbContext<AccountingDbContext>(opt => 
+            {
+                opt.UseInMemoryDatabase("AccountingDb");
+                opt.ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning));
+               
+            });
             /*services.AddDbContext<AccountingDbContext>(opt => 
                     opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"))); */
             
@@ -71,6 +80,8 @@ namespace AccountingService
             services.AddScoped<OrganizationService, OrganizationService>();
             services.AddScoped<AuthenticationService, AuthenticationService>();
             services.AddScoped<UserService, UserService>();
+            services.AddScoped<SignUpService, SignUpService>();
+
             
             
             services.AddDefaultAWSOptions(Configuration.GetAWSOptions());

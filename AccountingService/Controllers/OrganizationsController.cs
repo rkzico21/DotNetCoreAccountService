@@ -3,6 +3,7 @@ namespace AccoutingService.Controllers
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security.Claims;
     using System.Threading.Tasks;
     using AccountingService.Entities;
     using AccountingService.Filetes;
@@ -46,23 +47,9 @@ namespace AccoutingService.Controllers
         [ValidateModel]
         public IActionResult Post([FromBody] Organization neweOrganization)
         {
-           var organization = this.organizationService.CreateOrganization(neweOrganization);
+           var userEmail = AccountingService.Authentication.AuthenticationHelper.GetClaim(this.HttpContext, ClaimTypes.Name);
+           var organization = this.organizationService.CreateOrganization(neweOrganization, userEmail);
            return CreatedAtRoute("GetOrganization", new { id = organization.Id }, organization);
-        }
-
-        // PUT api/organizations/5
-        [HttpPut("{id}")]
-        public IActionResult Put(int id, Organization organization)
-        {
-            return Ok(this.organizationService.UpdateOrganization(id, organization));
-        }
-
-        // DELETE api/organizations/5
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
-        {
-            this.organizationService.Delete(id);
-            return NoContent();
         }
     }
 }

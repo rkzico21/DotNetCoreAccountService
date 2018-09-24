@@ -45,16 +45,22 @@ namespace AccountingService.Authentication
            
            var tokenHandler = new JwtSecurityTokenHandler();
            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
-            var tokenDescriptor = new SecurityTokenDescriptor
+           var claims = new List<Claim> { 
+                                new Claim(ClaimTypes.Name, user.Email)
+                            };
+
+           if(user.OrganizationId.HasValue)
+           {
+               claims.Add( new Claim("Organization", user.OrganizationId.Value.ToString()));
+           }   
+
+           var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new Claim[] 
-                {
-                    new Claim(ClaimTypes.Name, user.Email.ToString()),
-                    new Claim("Organization", user.OrganizationId.Value.ToString())
-                }),
+                Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
+
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
             var response = new LoginResponse{

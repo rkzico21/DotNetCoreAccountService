@@ -20,7 +20,7 @@ namespace AccountingService.Repositories
             get { return this.dbContext; }
         }
 
-        public T Add(T entity) 
+        public virtual T Add(T entity) 
         {
              //only requires for in memory db
             this.AssignId(entity);
