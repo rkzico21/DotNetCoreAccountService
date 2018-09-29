@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using AccountingService.Authentication;
 using AccountingService.Entities;
+using AccountingService.Filetes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -24,6 +25,7 @@ namespace AccoutingService.Controllers
         }
 
         [HttpPost("{login}")]
+        [ValidateModel]
         public IActionResult Authenticate([FromBody] LoginModel loginModel )
         {
             return Ok(authenticationService.Authenticate(loginModel));
