@@ -25,7 +25,9 @@ namespace AccountingService.Repositories
 
         public void LoadItems(JournalTransaction transaction)
         {
-            this.DbContext.Entry(transaction).Collection(t=>t.Items).Load();
+            this.DbContext.Entry(transaction).Collection(t=>t.Debits).Load();
+            
+            this.DbContext.Entry(transaction).Collection(t=>t.Credits).Load();
         }  
     }
 }

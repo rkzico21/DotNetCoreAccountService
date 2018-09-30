@@ -33,7 +33,20 @@ namespace AccountingService.Services
              return organization; 
         }
 
-        public Organization CreateOrganization(Organization organization, string ownerEmail) => repository.Add(organization, ownerEmail);
+        public Organization CreateOrganization(Organization organization, string ownerEmail) 
+        {
+             return  repository.Add(organization, ownerEmail); 
+        }
+
+
+        private void AddDefaultAccounts(Organization organization)
+        {
+                organization.Accounts = new List<Account>
+                {
+                    new Account{Id = 1, Name = "Cash at Hand", GroupId=1, AccountTypeId = 1, OrganizationId=1}, 
+                    new Account{Id = 2, Name = "Cash at Bank", GroupId=1, AccountTypeId = 1 ,OrganizationId=2 } 
+                };
+        } 
 
     }
 }

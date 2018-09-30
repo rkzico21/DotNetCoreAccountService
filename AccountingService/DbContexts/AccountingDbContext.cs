@@ -53,9 +53,18 @@ namespace AccountingService.DbContexts
            modelBuilder.Entity<User>().HasOne(u=>u.Organization);
            modelBuilder.Entity<Transaction>().HasOne(t=>t.Account);
            modelBuilder.Entity<JournalTransaction>().HasBaseType<Transaction>();
-           modelBuilder.Entity<TransactionItem>().HasOne(i => i.Transaction).
-                    WithMany(t=>t.Items).HasForeignKey(t=>t.TransactionId);
+           /*modelBuilder.Entity<TransactionItem>().HasOne(i => i.Transaction).
+                    WithMany(t=>t.Debits).HasForeignKey(t=>t.TransactionId).WithMany(t=>t.Cre);*/
+           modelBuilder.Entity<JournalTransaction>().HasMany(t=>t.Credits).WithOne(c=>c.Transaction).HasForeignKey(c=>c.TransactionId);
+           modelBuilder.Entity<JournalTransaction>().HasMany(t=>t.Debits);
 
+
+            modelBuilder.Entity<TransactionItem>()
+            .Property(t => t.Id)
+            .ValueGeneratedOnAdd();
+
+            
+          
             
            modelBuilder.Entity<AccountGroup>().HasData(
                new AccountGroup{ Id=1, Name = "Assets"}, 
@@ -108,14 +117,14 @@ namespace AccountingService.DbContexts
             );
 
             
-            modelBuilder.Entity<JournalTransaction>().HasData(
-                new JournalTransaction{ Id = 3, OrganizationId = 1, AccountId = 1,  TransactionDate = DateTime.Now}
+           /* modelBuilder.Entity<JournalTransaction>().HasData(
+                new JournalTransaction{ Id = 3, OrganizationId = 1, AccountId = 1,  TransactionDate = DateTime.Now, Amount =100}
             );
             
             modelBuilder.Entity<TransactionItem>().HasData(
                 new TransactionItem {Id = 1, TransactionType = "credit", Amount = 100, TransactionId = 3, AccountId = 1, OrganizationId=1 },
                 new TransactionItem {Id = 2, TransactionType = "debit", Amount = 100, TransactionId = 3, AccountId =1, OrganizationId=1}   
-            );
+            );*/
 
             
 

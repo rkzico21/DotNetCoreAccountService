@@ -125,7 +125,7 @@ namespace AccountingService.Filetes
                             
                             var response = reader.ReadToEnd();
                             var transaction = JsonConvert.DeserializeObject(response, typeof(Transaction)) as Transaction;
-                            if(transaction != null)
+                            if(transaction != null && transaction.TransactionTypeId != 3)
                             {
                                 organizationId = dbContext.Accounts.FirstOrDefault(a=>a.Id == transaction.AccountId)?.OrganizationId;
                                 if(organizationId.HasValue && IsUserOrganizationDiffrent(context, organizationId.Value))

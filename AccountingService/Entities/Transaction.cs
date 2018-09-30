@@ -7,6 +7,7 @@ namespace AccountingService.Entities
     using Newtonsoft.Json;
 
     [Table("transactions")]
+    [JsonConverter(typeof(TransactionConverter))]
     public class Transaction : EntityBase
     {
         [Required]
@@ -14,7 +15,7 @@ namespace AccountingService.Entities
         public int? TransactionTypeId { get; set; }
 
 
-        [Required]
+        //[Required]
         [Column("account_id")]
         public  int? AccountId { get; set; }
 

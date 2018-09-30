@@ -46,6 +46,7 @@ namespace AccountingService
                     AddJsonOptions(options=> 
                     {
                         options.SerializerSettings.DateFormatString ="yyyy-MM-dd";
+                        options.SerializerSettings.Converters.Add(new TransactionConverter());
                     }).
                     SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.Configure<ApiBehaviorOptions>(options =>
@@ -128,6 +129,8 @@ namespace AccountingService
 
             services.AddScoped<IAuthorizationHandler, AccountAccessHandler>();
             services.AddScoped<IAuthorizationHandler, TransactionAccessHandler>();
+
+           
 
            /* services.AddHttpsRedirection(options =>
             {

@@ -2,6 +2,7 @@ namespace AccountingService.Services
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using AccountingService.Entities;
     using AccountingService.Exceptions;
     using AccountingService.Repositories;
@@ -51,12 +52,22 @@ namespace AccountingService.Services
 
         public Transaction CreateTransaction(Transaction transaction)
         {
-            var account = this.accountRepository.FindById(transaction.AccountId.Value);
-            if(account == null)
+            if(transaction is JournalTransaction journalTransaction)
             {
-                var message = $"Account with id {transaction.AccountId.Value} not found";
-                logger.LogWarning(message);
-                throw new ResourceNotFoundException(message); 
+               var accountId =  journalTransaction.Credits.FirstOrDefault()?.AccountId;
+               journalTransaction.Amount = journalTransaction.Credits.Sum(c=>c.Amount);
+            }
+            else
+            {
+                var account = this.accountRepository.FindById(transaction.AccountId.Value);
+                if(account == null)
+                {
+                    var message = $"Account with id {transaction.AccountId.Value} not found";
+                    logger.LogWarning(message);
+                    throw new ResourceNotFoundException(message); 
+                }
+
+                transaction.OrganizationId = account.OrganizationId; 
             }
             
             if(!transaction.TransactionDate.HasValue)
@@ -65,9 +76,10 @@ namespace AccountingService.Services
                 transaction.TransactionDate = DateTime.Now;
             }
 
-            transaction.OrganizationId = account.OrganizationId; 
             return repository.Add(transaction);
         }
+
+
 
         public void Delete(int id) => repository.Delete(id);
     }
