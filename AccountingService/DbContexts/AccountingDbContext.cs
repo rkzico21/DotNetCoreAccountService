@@ -53,8 +53,7 @@ namespace AccountingService.DbContexts
            modelBuilder.Entity<User>().HasOne(u=>u.Organization);
            modelBuilder.Entity<Transaction>().HasOne(t=>t.Account);
            modelBuilder.Entity<JournalTransaction>().HasBaseType<Transaction>();
-           /*modelBuilder.Entity<TransactionItem>().HasOne(i => i.Transaction).
-                    WithMany(t=>t.Debits).HasForeignKey(t=>t.TransactionId).WithMany(t=>t.Cre);*/
+           
            modelBuilder.Entity<JournalTransaction>().HasMany(t=>t.Credits).WithOne(c=>c.Transaction).HasForeignKey(c=>c.TransactionId);
            modelBuilder.Entity<JournalTransaction>().HasMany(t=>t.Debits);
 

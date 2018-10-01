@@ -27,7 +27,7 @@ namespace AccountingService.Services
 
         public IEnumerable<Account> GetAccounts(int? organizationId, int? group, int? accountType)
         {
-             return repository.FindAll(organizationId, group, accountType);
+            return  repository.FindAll(organizationId, group, accountType);
         }
 
         public Account CreateAccount(Account account, int organizationId)
@@ -38,6 +38,7 @@ namespace AccountingService.Services
                 throw new ResourceNotFoundException($"Account Type with id:{account.AccountTypeId.Value} does not exist"); 
             }
             
+
             account.GroupId = accountType.GroupId; //make sure correct group id has been assigned.
             account.OrganizationId = organizationId;
             return this.repository.Add(account);
