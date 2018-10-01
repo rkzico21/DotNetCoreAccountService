@@ -47,9 +47,16 @@ namespace AccountingService
         [ValidateModel]
         public IActionResult  CreateTransaction([FromBody] Transaction newTransaction)
         {
-            newTransaction.OrganizationId = GetOrganizationId();
-            var transaction =  transactionService.CreateTransaction(newTransaction);
-            return CreatedAtRoute("GetTransaction", new { id = transaction.Id }, transaction);
+            if(TryValidateModel(newTransaction))
+            {
+                newTransaction.OrganizationId = GetOrganizationId();
+                var transaction =  transactionService.CreateTransaction(newTransaction);
+                return CreatedAtRoute("GetTransaction", new { id = transaction.Id }, transaction);
+            }
+
+            return new ValidationFailedResult(ModelState);
+        
+            
         }
 
         [HttpDelete("{id}")]

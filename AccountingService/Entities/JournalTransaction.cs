@@ -24,7 +24,7 @@ namespace AccountingService.Entities
       {
           if(this.Debits.Sum(d=>d.Amount) != this.Credits.Sum(c=>c.Amount))
           {
-              yield return new ValidationResult("Debit and Credit amounts are not equal");
+              yield return new ValidationResult("Debit and Credit amounts are not equal", new[] { "Debits", "Credits" });
           }
             
       }
