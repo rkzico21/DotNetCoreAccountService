@@ -20,18 +20,20 @@ namespace AccountingService
     public class AccountsController : ControllerBase
     {
         private AccountService accountService;
+        private readonly UserService userService;
         private readonly ILogger<AccountsController> logger;
 
-        public AccountsController(AccountService accountService, ILogger<AccountsController> logger)
+        public AccountsController(AccountService accountService, UserService userService, ILogger<AccountsController> logger)
         {
             this.accountService = accountService;
+            this.userService = userService;
             this.logger = logger;
         }
         
         [HttpGet]
         public IActionResult GetAccounts([FromQuery(Name="group")] int? group, [FromQuery(Name="type")] int? accountType)
         {
-            var organizationId = this.GetOrganizationId();
+            var organizationId = this.GetOrganizationId(this.userService);
             return organizationId >=1 ? Ok(accountService.GetAccounts(organizationId, group, accountType)) 
                                 : Ok(Enumerable.Empty<Account>());   
             
@@ -50,7 +52,7 @@ namespace AccountingService
         [ValidateModel]
         public IActionResult  CreateAccount([FromBody] Account newAccount)
         {
-            var organizationId = this.GetOrganizationId();
+            var organizationId = this.GetOrganizationId(this.userService);
             var account =  accountService.CreateAccount(newAccount, organizationId);
             return CreatedAtRoute("GetAccount", new { id = account.Id }, account);
         }
@@ -61,13 +63,6 @@ namespace AccountingService
             logger.LogDebug($"Deleting account with id : {id}");
             accountService.Delete(id);
             return NoContent();
-        }
-
-        private int GetOrganizationId()
-        {
-            var organizationIdValue = AuthenticationHelper.GetClaim(this.HttpContext, "Organization");
-            int organizationId;
-            return  int.TryParse(organizationIdValue, out organizationId) ? organizationId : -1;
         }
      }
 }

@@ -19,18 +19,20 @@ namespace AccountingService
     public class TransactionsController : ControllerBase
     {
         private TransactionService transactionService;
+        private readonly UserService userService;
         private readonly ILogger<TransactionsController> logger;
 
-        public TransactionsController(TransactionService transactionService, ILogger<TransactionsController> logger)
+        public TransactionsController(TransactionService transactionService, UserService userService, ILogger<TransactionsController> logger)
         {
             this.transactionService = transactionService;
+            this.userService = userService;
             this.logger = logger;
         }
         
         [HttpGet]
         public IActionResult GetTransactions()
         {
-            var organizationId = GetOrganizationId();
+            var organizationId = this.GetOrganizationId(this.userService);
             return  organizationId <=0 ?  Ok(Enumerable.Empty<Transaction>()) : Ok(transactionService.GetTransactions(organizationId));
         }
 
@@ -49,7 +51,7 @@ namespace AccountingService
         {
             if(TryValidateModel(newTransaction))
             {
-                newTransaction.OrganizationId = GetOrganizationId();
+                newTransaction.OrganizationId = this.GetOrganizationId(this.userService);
                 var transaction =  transactionService.CreateTransaction(newTransaction);
                 return CreatedAtRoute("GetTransaction", new { id = transaction.Id }, transaction);
             }
@@ -66,12 +68,5 @@ namespace AccountingService
             transactionService.Delete(id);
             return NoContent();
         }
-
-        private int GetOrganizationId()
-        {
-            var organizationIdValue = AuthenticationHelper.GetClaim(this.HttpContext, "Organization");
-            int organizationId;
-            return  int.TryParse(organizationIdValue, out organizationId) ? organizationId : -1;
-        }
-     }
+    }
 }

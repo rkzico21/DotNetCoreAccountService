@@ -20,6 +20,7 @@ namespace AccountingService.Entities
         public  int? AccountId { get; set; }
 
         [Column("amount")]
+        [Range(0.0, Double.MaxValue)]
         public double Amount { get; set; }
 
         [Column("description")]
@@ -39,8 +40,5 @@ namespace AccountingService.Entities
         
         [JsonIgnore]
         public Account Account {get; set;}
-
-   
-        //TODO: add other category. or categories
     }
 }
