@@ -11,13 +11,13 @@ namespace AccountingService.Repositories
                : base(dbContext)
         {
         }
-        public IEnumerable<Transaction> FindAll(int? organizationId)
+        public IEnumerable<Transaction> FindAll(string organizationId)
         {
             var allTransactions = this.DbContext.Transactions.AsQueryable();
             
-            if(organizationId.HasValue)
+            if(!string.IsNullOrWhiteSpace(organizationId))
             {
-               allTransactions = allTransactions.Where(t => t.OrganizationId == organizationId.Value);
+               allTransactions = allTransactions.Where(t => t.OrganizationId.ToString() == organizationId);
             }
             
              return allTransactions.AsEnumerable();

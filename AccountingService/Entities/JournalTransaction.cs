@@ -15,9 +15,9 @@ namespace AccountingService.Entities
             this.TransactionTypeId = 3;
         }
         
-      public IList<TransactionItem> Debits {get; set;}
+      public IList<Crebit> Debits {get; set;}
 
-      public IList<TransactionItem> Credits {get; set;}
+      public IList<Debit> Credits {get; set;}
     
       public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
       {

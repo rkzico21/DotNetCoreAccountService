@@ -7,20 +7,19 @@ namespace AccountingService
     
     public static  class ControllerBaseExtension
     {
-        public static int GetOrganizationId(this ControllerBase controller, UserService userService)
+        public static string GetOrganizationId(this ControllerBase controller, UserService userService)
         {
             var organizationIdValue = AuthenticationHelper.GetClaim(controller.HttpContext, "Organization");
-            int organizationId;
             
-            if(int.TryParse(organizationIdValue, out organizationId))
+            if(!string.IsNullOrWhiteSpace(organizationIdValue))
             { 
-                return organizationId;
+                return organizationIdValue;
             }
             else
             {
                var userEmail = AuthenticationHelper.GetClaim(controller.HttpContext, ClaimTypes.Name);
                var user =  userService.GetUserByEmail(userEmail);
-               return ( user != null &&  user.OrganizationId.HasValue) ? user.OrganizationId.Value : -1;
+               return ( user != null &&  user.OrganizationId != null) ? user.OrganizationId.ToString() : null;
             }
         }
     }

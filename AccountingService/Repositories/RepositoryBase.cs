@@ -23,13 +23,13 @@ namespace AccountingService.Repositories
         public virtual T Add(T entity) 
         {
              //only requires for in memory db
-            this.AssignId(entity);
+            //this.AssignId(entity);
             this.dbContext.GetDbSet<T>(typeof(T)).Add(entity);
             this.dbContext.SaveChanges();
             return entity;
         }
         
-        public void Delete(int id)
+        public void Delete(string id)
         {
              var entity = this.FindById(id);
              if(entity != null)
@@ -44,23 +44,10 @@ namespace AccountingService.Repositories
             return this.dbContext.GetDbSet<T>(typeof(T)).AsEnumerable();
         }
         
-        public T FindById(int id)
+        public T FindById(string id)
         {
-            return this.dbContext.GetDbSet<T>(typeof(T)).FirstOrDefault(e => e.Id == id);
+            return this.dbContext.GetDbSet<T>(typeof(T)).FirstOrDefault(e => e.Id.ToString() == id);
         }
        
-        private void AssignId(T entity)
-        {
-            try
-            {
-                var value = this.dbContext.GetDbSet<T>(typeof(T)).Max(e=>e.Id);
-                entity.Id = value + 1 ;
-            }
-            catch(Exception ex)
-            {
-                entity.Id = 1;
-            }
-            
-        }
     }
 }

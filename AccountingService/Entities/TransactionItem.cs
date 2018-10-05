@@ -5,11 +5,12 @@ namespace AccountingService.Entities
     using System.ComponentModel.DataAnnotations.Schema;
     using Newtonsoft.Json;
 
+    [Table("transaction_items")]
     public class TransactionItem : EntityBase
     {
 
         [Column("transaction_id")]
-        public int TransactionId {get; set;}
+        public Guid TransactionId { get; set;}
 
         [Column("type")]
         [Required]
@@ -21,11 +22,11 @@ namespace AccountingService.Entities
 
         [Column("account_id")]
         [Required]
-        public int?  AccountId {get; set;}
+        public Guid AccountId {get; set;}
 
         [JsonIgnore]
         [Column("organization_id")]
-        public int? OrganizationId { get; set; }
+        public Guid OrganizationId { get; set; }
 
         [JsonIgnore]
         public JournalTransaction Transaction {get; set;}
@@ -33,5 +34,23 @@ namespace AccountingService.Entities
         [JsonIgnore]
         public Account Account {get; set;}
 
+    }
+
+
+    public class Debit: TransactionItem
+    {
+        public Debit()
+        {
+            this.TransactionType = "debit";
+        }
+    }
+
+
+    public class Crebit: TransactionItem
+    {
+        public Crebit()
+        {
+            this.TransactionType = "credit";
+        }
     }
 }

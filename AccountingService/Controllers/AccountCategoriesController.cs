@@ -23,14 +23,14 @@ namespace AccountingService
         }
         
         [HttpGet]
-        public IActionResult GetGroups([FromQuery(Name="orgid")] int? organizationId)
+        public IActionResult GetGroups([FromQuery(Name="orgid")] string organizationId)
         {
             return  Ok(accountService.GetGroups());
         }
 
 
         [HttpGet("types")]
-        public IActionResult GetAccountType([FromQuery(Name="orgid")] int? organizationId,  [FromQuery(Name="group")]int? groupId)
+        public IActionResult GetAccountType([FromQuery(Name="orgid")] string organizationId,  [FromQuery(Name="group")]string groupId)
         {
             return  Ok(accountService.GetAccountTypes(organizationId, groupId));
         }

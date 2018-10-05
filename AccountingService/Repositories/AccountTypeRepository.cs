@@ -16,23 +16,22 @@ namespace AccountingService.Repositories
         
         }
 
-       
-        public IEnumerable<AccountType> FindAll(int? group, bool includeAccounts, int? organizationId)
+        public IEnumerable<AccountType> FindAll(string group, bool includeAccounts, string organizationId)
         {
             var allAccountTypes = this.GetAccountsTypeQueryble(includeAccounts);
             
-            if(group.HasValue)
+            if(!string.IsNullOrWhiteSpace(group))
             {
-                allAccountTypes = allAccountTypes.Where(a=>a.GroupId == group);
+                allAccountTypes = allAccountTypes.Where(a=>a.GroupId.ToString() == group);
             }
             
             var types = allAccountTypes.AsEnumerable();
 
-            if(organizationId.HasValue)
+            if(!string.IsNullOrWhiteSpace(organizationId))
             {
                 foreach(var type in types)
                 {
-                    type.Accounts = type.Accounts.Where(a=>a.OrganizationId == organizationId.Value).ToList();
+                    type.Accounts = type.Accounts.Where(a=>a.OrganizationId.ToString() == organizationId).ToList();
                 }
             }
 

@@ -20,7 +20,7 @@ namespace AccountingService.Services
 
         public IEnumerable<Organization> GetOrganizations() => this.repository.FindAll();
 
-        public Organization GetOrganization(int id)
+        public Organization GetOrganization(string id)
         {
              Organization organization = this.repository.FindById(id);
              if(organization == null)
@@ -37,16 +37,5 @@ namespace AccountingService.Services
         {
              return  repository.Add(organization, ownerEmail); 
         }
-
-
-        private void AddDefaultAccounts(Organization organization)
-        {
-                organization.Accounts = new List<Account>
-                {
-                    new Account{Id = 1, Name = "Cash at Hand", GroupId=1, AccountTypeId = 1, OrganizationId=1}, 
-                    new Account{Id = 2, Name = "Cash at Bank", GroupId=1, AccountTypeId = 1 ,OrganizationId=2 } 
-                };
-        } 
-
     }
 }

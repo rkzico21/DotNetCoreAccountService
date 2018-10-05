@@ -60,14 +60,14 @@ namespace AccountingService
             services.AddScoped<PasswordHasher<User>, PasswordHasher<User>>();
             services.AddScoped<PasswordHasher<SignUpModel>, PasswordHasher<SignUpModel>>();
 
-            services.AddDbContext<AccountingDbContext>(opt => 
+            /*services.AddDbContext<AccountingDbContext>(opt => 
             {
                 opt.UseInMemoryDatabase("AccountingDb");
                 opt.ConfigureWarnings(x => x.Ignore(InMemoryEventId.TransactionIgnoredWarning));
                
-            });
-            /*services.AddDbContext<AccountingDbContext>(opt => 
-                    opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"))); */
+            });*/
+            services.AddDbContext<AccountingDbContext>(opt => 
+                    opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection"))); 
             
             services.AddScoped<AccountRepository, AccountRepository>();
             services.AddScoped<AccountGroupRepository, AccountGroupRepository>();
@@ -155,7 +155,7 @@ namespace AccountingService
             app.UseCors(opt =>opt.WithHeaders("*").WithMethods("*").WithOrigins("*"));
 
             // required for in memory
-            this.SeedData(app);
+            //this.SeedData(app);
 
             app.UseMiddleware(typeof(ExceptionHandler));
             app.UseAuthentication();

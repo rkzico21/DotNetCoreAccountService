@@ -17,7 +17,7 @@ namespace AccountingService.Entities
 
         //[Required]
         [Column("account_id")]
-        public  int? AccountId { get; set; }
+        public  Guid? AccountId { get; set; }
 
         [Column("amount")]
         [Range(0.0, Double.MaxValue)]
@@ -33,7 +33,7 @@ namespace AccountingService.Entities
 
         [JsonIgnore]
         [Column("organization_id")]
-        public int? OrganizationId { get; set; }
+        public Guid OrganizationId { get; set; }
 
         [Column("note")]
         public string Note{get; set;}

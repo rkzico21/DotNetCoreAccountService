@@ -31,17 +31,17 @@ namespace AccountingService
         }
         
         [HttpGet]
-        public IActionResult GetAccounts([FromQuery(Name="group")] int? group, [FromQuery(Name="type")] int? accountType)
+        public IActionResult GetAccounts([FromQuery(Name="group")] string group, [FromQuery(Name="type")] string accountType)
         {
             var organizationId = this.GetOrganizationId(this.userService);
-            return organizationId >=1 ? Ok(accountService.GetAccounts(organizationId, group, accountType)) 
+            return organizationId != null  ? Ok(accountService.GetAccounts(organizationId, group, accountType)) 
                                 : Ok(Enumerable.Empty<Account>());   
             
         }
 
 
         [HttpGet("{id}", Name="GetAccount")]
-        public IActionResult GetAccount(int id)
+        public IActionResult GetAccount(string id)
         {
             logger.LogDebug($"Get account with id : {id}");
             var account = accountService.GetAccount(id);
@@ -58,7 +58,7 @@ namespace AccountingService
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteAccount(int id)
+        public IActionResult DeleteAccount(string id)
         {
             logger.LogDebug($"Deleting account with id : {id}");
             accountService.Delete(id);

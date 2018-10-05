@@ -37,7 +37,7 @@ namespace AccoutingService.Controllers
 
         // GET api/organizations/5
         [HttpGet("{id}", Name="GetOrganization")]
-        public IActionResult GetOrganization(int id)
+        public IActionResult GetOrganization(string id)
         {
             return Ok(this.organizationService.GetOrganization(id));
         }

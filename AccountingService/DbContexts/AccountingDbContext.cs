@@ -54,69 +54,58 @@ namespace AccountingService.DbContexts
            modelBuilder.Entity<Transaction>().HasOne(t=>t.Account);
            modelBuilder.Entity<JournalTransaction>().HasBaseType<Transaction>();
            
-           modelBuilder.Entity<JournalTransaction>().HasMany(t=>t.Credits).WithOne(c=>c.Transaction).HasForeignKey(c=>c.TransactionId);
-           modelBuilder.Entity<JournalTransaction>().HasMany(t=>t.Debits);
+           modelBuilder.Entity<Crebit>().HasBaseType<TransactionItem>().HasOne(t=>t.Transaction);
+           modelBuilder.Entity<Debit>().HasBaseType<TransactionItem>().HasOne(t=>t.Transaction);
+
+
 
 
             modelBuilder.Entity<TransactionItem>()
             .Property(t => t.Id)
             .ValueGeneratedOnAdd();
 
+            modelBuilder.Entity<User>()
+            .Property(t => t.Id)
+            .ValueGeneratedOnAdd();
+
             
           
-            
-           modelBuilder.Entity<AccountGroup>().HasData(
-               new AccountGroup{ Id=1, Name = "Assets"}, 
-               new AccountGroup{ Id=2, Name = "Liabilities"}, 
-               new AccountGroup{ Id=3, Name = "Equity"});
+           var accountGroup1=  new AccountGroup{ Id = Guid.NewGuid(),  Name = "Assets"};
+           var accountGroup2 = new AccountGroup{ Id = Guid.NewGuid(), Name = "Liabilities"};
+           var accountGroup3 =  new AccountGroup{  Id = Guid.NewGuid(), Name = "Equity"};
+           modelBuilder.Entity<AccountGroup>().HasData(accountGroup1, accountGroup2, accountGroup3);
+           
 
-           modelBuilder.Entity<AccountType>().HasData(
-               new AccountType{Id = 1, Name = "Cash/Bank", GroupId=1}, 
-               new AccountType{Id = 2, Name = "Money in Transit", GroupId=1},
-               new AccountType{Id = 3, Name = "Payments from Sales", GroupId=1},
+           var accountType1 = new AccountType{ Id = Guid.NewGuid(), Name = "Cash/Bank", GroupId=accountGroup1.Id}; 
+           var accountType2 = new AccountType{ Id = Guid.NewGuid(), Name = "Money in Transit", GroupId=accountGroup1.Id};
+           var accountType3 =    new AccountType{ Id = Guid.NewGuid(), Name = "Payments from Sales", GroupId=accountGroup1.Id};
                
-               new AccountType{Id = 4, Name = "Credit Card", GroupId=2},
-               new AccountType{Id = 5, Name = "Loan and Line of Credit", GroupId=2},
-               new AccountType{Id = 6, Name = "Taxes", GroupId=2},
+            var accountType4 =   new AccountType{ Id = Guid.NewGuid(), Name = "Credit Card", GroupId=accountGroup2.Id};
+            var accountType5 =   new AccountType{ Id = Guid.NewGuid(), Name = "Loan and Line of Credit", GroupId=accountGroup2.Id};
+            var accountType6 =   new AccountType{ Id = Guid.NewGuid(), Name = "Taxes", GroupId=accountGroup2.Id};
                
-               new AccountType{Id = 7, Name = "Own Contribution", GroupId=3},
-               new AccountType{Id = 8, Name = "Drawing", GroupId=3}
-               );
-
-
-            modelBuilder.Entity<Organization>().HasData(
-                new Organization{Id = 1, Name = "Organization 1"} 
+            var accountType7 =   new AccountType{ Id = Guid.NewGuid(), Name = "Own Contribution", GroupId=accountGroup3.Id};
+            var accountType8 =   new AccountType{ Id = Guid.NewGuid(), Name = "Drawing", GroupId=accountGroup3.Id};
+           
+           modelBuilder.Entity<AccountType>().HasData(accountType1,
+                accountType2, accountType3, accountType4, accountType5, accountType6, accountType7, accountType8
             );
 
-            modelBuilder.Entity<Organization>().HasData(
-                new Organization{Id = 2, Name = "Organization 2" } 
-            );
 
+
+            var organization1 =    new Organization{ Id = Guid.NewGuid(), Name = "Organization 1"} ;
+            var organization2 =    new Organization{ Id = Guid.NewGuid(), Name = "Organization 2"} ;
+            var organization3 =    new Organization{ Id = Guid.NewGuid(), Name = "Organization 3"} ;
+
+           modelBuilder.Entity<Organization>().HasData(organization1, organization2, organization3);
+           
+            var account1 = new Account{ Id = Guid.NewGuid(),  Name = "Cash at Hand", GroupId= accountGroup1.Id, AccountTypeId = accountType1.Id, OrganizationId= organization1.Id }; 
+           
+            modelBuilder.Entity<Account>().HasData(account1);
 
             
-            modelBuilder.Entity<Organization>().HasData(
-                new Organization{Id = 3, Name = "Organization 3"} 
-            );
-
-
-            modelBuilder.Entity<Account>().HasData(
-                new Account{Id = 1, Name = "Cash at Hand", GroupId=1, AccountTypeId = 1, OrganizationId=1 } 
-            );
-
-            modelBuilder.Entity<Transaction>().HasData(
-                new Transaction{ Id=1, AccountId= 1, OrganizationId = 1, TransactionTypeId =1, TransactionDate = DateTime.Now }
-            );
-
-            modelBuilder.Entity<Account>().HasData(
-                new Account{Id = 2, Name = "Cash at Bank", GroupId=1, AccountTypeId = 1 ,OrganizationId=2 } 
-            );
-
-            modelBuilder.Entity<Transaction>().HasData(
-                new Transaction{ Id=2, AccountId= 2, OrganizationId = 2, TransactionTypeId =1 ,TransactionDate = DateTime.Now }
-            );
-
             
-           /* modelBuilder.Entity<JournalTransaction>().HasData(
+           /*modelBuilder.Entity<JournalTransaction>().HasData(
                 new JournalTransaction{ Id = 3, OrganizationId = 1, AccountId = 1,  TransactionDate = DateTime.Now, Amount =100}
             );
             
@@ -128,9 +117,9 @@ namespace AccountingService.DbContexts
             
 
             
-            var user1 = new User{Id =1, Name = "User 1", Email="user1@Organization1.com", Password = "123456", OrganizationId=1};
-            var user2 = new User{Id =2, Name = "User 2", Email="user2@Organization2.com", Password = "123456", OrganizationId=2};    
-            var user3 = new User{Id =3, Name = "User 3", Email="user3@Organization3.com", Password = "123456", OrganizationId=3};  
+            var user1 = new User{ Id = Guid.NewGuid(),  Name = "User 1", Email="user1@Organization1.com", Password = "123456", OrganizationId = organization1.Id};
+            var user2 = new User{ Id = Guid.NewGuid(), Name = "User 2", Email="user2@Organization2.com", Password = "123456", OrganizationId = organization2.Id};    
+            var user3 = new User{ Id = Guid.NewGuid(), Name = "User 3", Email="user3@Organization3.com", Password = "123456", OrganizationId = organization3.Id};  
             
             user1.Password =  passwordHasher.HashPassword(user1, user1.Password);
             user2.Password =  passwordHasher.HashPassword(user1, user2.Password);

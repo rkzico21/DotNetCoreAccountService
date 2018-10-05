@@ -33,12 +33,12 @@ namespace AccountingService
         public IActionResult GetTransactions()
         {
             var organizationId = this.GetOrganizationId(this.userService);
-            return  organizationId <=0 ?  Ok(Enumerable.Empty<Transaction>()) : Ok(transactionService.GetTransactions(organizationId));
+            return  string.IsNullOrWhiteSpace(organizationId) ?  Ok(Enumerable.Empty<Transaction>()) : Ok(transactionService.GetTransactions(organizationId));
         }
 
 
         [HttpGet("{id}", Name="GetTransaction")]
-        public IActionResult GetTransaction(int id)
+        public IActionResult GetTransaction(string id)
         {
             logger.LogDebug($"Get transaction with id : {id}");
             var transaction = transactionService.GetTransaction(id);
@@ -51,7 +51,7 @@ namespace AccountingService
         {
             if(TryValidateModel(newTransaction))
             {
-                newTransaction.OrganizationId = this.GetOrganizationId(this.userService);
+                newTransaction.OrganizationId = Guid.Parse(this.GetOrganizationId(this.userService)); 
                 var transaction =  transactionService.CreateTransaction(newTransaction);
                 return CreatedAtRoute("GetTransaction", new { id = transaction.Id }, transaction);
             }
@@ -62,7 +62,7 @@ namespace AccountingService
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeleteTransaction(int id)
+        public IActionResult DeleteTransaction(string id)
         {
             logger.LogDebug($"Deleting transaction with id : {id}");
             transactionService.Delete(id);

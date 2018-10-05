@@ -1,5 +1,6 @@
 namespace AccountingService.Entities
 {
+    using System;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using Newtonsoft.Json;
@@ -22,7 +23,7 @@ namespace AccountingService.Entities
         public string Password { get; set; }
 
         [Column("organization_id")]
-        public int? OrganizationId {get; set;}
+        public Guid? OrganizationId {get; set;}
 
         [JsonIgnore]
         public Organization Organization { get; set;}

@@ -21,9 +21,9 @@ namespace AccountingService.Services
             this.logger = logger;
         }
 
-        public IEnumerable<Transaction> GetTransactions(int? organizationId) => repository.FindAll(organizationId);
+        public IEnumerable<Transaction> GetTransactions(string organizationId) => repository.FindAll(organizationId);
 
-        public Transaction GetTransaction(int id)
+        public Transaction GetTransaction(string id)
         {
             var transaction = repository.FindById(id);
             
@@ -59,10 +59,10 @@ namespace AccountingService.Services
             }
             else
             {
-                var account = this.accountRepository.FindById(transaction.AccountId.Value);
+                var account = this.accountRepository.FindById(transaction.AccountId.ToString());
                 if(account == null)
                 {
-                    var message = $"Account with id {transaction.AccountId.Value} not found";
+                    var message = $"Account with id {transaction.AccountId.ToString()} not found";
                     logger.LogWarning(message);
                     throw new ResourceNotFoundException(message); 
                 }
@@ -81,6 +81,6 @@ namespace AccountingService.Services
 
 
 
-        public void Delete(int id) => repository.Delete(id);
+        public void Delete(string id) => repository.Delete(id);
     }
 }

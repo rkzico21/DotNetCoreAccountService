@@ -23,7 +23,7 @@ namespace AccountingService.Services
              return this.repository.FindAll();
         }
 
-        public User GetUser(int id)
+        public User GetUser(string id)
         {
              User User = this.repository.FindById(id);
              if(User == null)

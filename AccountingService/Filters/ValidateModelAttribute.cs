@@ -102,15 +102,13 @@ namespace AccountingService.Filetes
             if(context.Resource is AuthorizationFilterContext mvcContext)
             {
                 var request = mvcContext.HttpContext.Request;
-                int? organizationId = null;
+                Guid? organizationId =null;
                 if(request.Method == HttpMethods.Get || request.Method == HttpMethods.Delete || request.Method == HttpMethods.Put)
                 {
                     var routeDate = mvcContext.RouteData;
                     if(routeDate.Values.ContainsKey("id"))
                     {
-                        int id;
-                        int.TryParse(routeDate.Values["id"].ToString(), out id); 
-                        var transaction = this.dbContext.Transactions.FirstOrDefault(a=>a.Id == id);
+                        var transaction = this.dbContext.Transactions.FirstOrDefault(a=>a.Id.ToString() == routeDate.Values["id"].ToString());
                         organizationId = transaction?.OrganizationId;
                     }
                 }
@@ -128,7 +126,7 @@ namespace AccountingService.Filetes
                             if(transaction != null && transaction.TransactionTypeId != 3)
                             {
                                 organizationId = dbContext.Accounts.FirstOrDefault(a=>a.Id == transaction.AccountId)?.OrganizationId;
-                                if(organizationId.HasValue && IsUserOrganizationDiffrent(context, organizationId.Value))
+                                if(organizationId.HasValue && IsUserOrganizationDiffrent(context, organizationId.Value.ToString()))
                                 {
                                     return Task.CompletedTask;
                                 }
@@ -143,7 +141,7 @@ namespace AccountingService.Filetes
                     }
                 }
 
-                if(organizationId.HasValue && IsUserOrganizationDiffrent(context, organizationId.Value))
+                if(organizationId.HasValue && IsUserOrganizationDiffrent(context, organizationId.Value.ToString()))
                 {
                     return Task.CompletedTask;
                 }
@@ -153,9 +151,9 @@ namespace AccountingService.Filetes
             return Task.CompletedTask;
         }
 
-        private bool IsUserOrganizationDiffrent(AuthorizationHandlerContext context, int organizationId)
+        private bool IsUserOrganizationDiffrent(AuthorizationHandlerContext context, string organizationId)
         {
-            if(!context.User.HasClaim(c => c.Type == "Organization" && c.Value == organizationId.ToString()))
+            if(!context.User.HasClaim(c => c.Type == "Organization" && c.Value == organizationId))
             {
                 context.Fail();
                 return true;
@@ -186,9 +184,7 @@ namespace AccountingService.Filetes
                     var routeDate = mvcContext.RouteData;
                     if(routeDate.Values.ContainsKey("id"))
                     {
-                        int id;
-                        int.TryParse(routeDate.Values["id"].ToString(), out id); 
-                        var account = this.dbContext.Accounts.FirstOrDefault(a=>a.Id == id);
+                        var account = this.dbContext.Accounts.FirstOrDefault(a=>a.Id.ToString() == routeDate.Values["id"].ToString());
                         
                         if(account != null && !context.User.HasClaim(c=>c.Type == "Organization" && c.Value == account.OrganizationId.ToString()))
                         {
